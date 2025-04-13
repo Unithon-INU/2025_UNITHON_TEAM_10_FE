@@ -1,50 +1,29 @@
-# Welcome to your Expo app 👋
-
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
-
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+# 환경세팅
+- npm
+- eas-cli
+- 플랫폼 별 sdk
+# 실행방법
+1. 의존성 설치
 ```bash
-npm run reset-project
+npm install
 ```
+2. prebuild
+```bash
+npx expo prebuild
+```
+3. 플랫폼별 빌드/ 실행
+```bash
+npm run [android|ios]
+```
+# 배포용 빌드 방법
+> ⚠️ `npx expo prebuild` 명령으로 prebuild 후 진행해주세요.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+> ⚠️ eas라는 CI 플랫폼을 이용해 빌드를 진행하는데, 이게 개인 계정이라 우선은 로컬빌드로 진행해야 할 것 같아요.
+1. 내부 배포
+```bash
+eas build [--platform android|ios] --profile preview
+```
+2. 정식 버전 배포
+```bash
+eas build [--platform android|ios]
+```
