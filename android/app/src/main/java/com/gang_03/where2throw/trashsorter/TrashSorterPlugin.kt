@@ -74,7 +74,6 @@ class TrashSorterPlugin(proxy: VisionCameraProxy, options: Map<String, Any>?) : 
 
     override fun callback(frame: Frame, arguments: Map<String, Any>?): Any? {
         frameCount++
-        Log.d("TrashSorterPlugin", "$frameCount th frame")
         if (frameCount % 10 != 0) {
             return lastPrediction
         }
@@ -91,7 +90,8 @@ class TrashSorterPlugin(proxy: VisionCameraProxy, options: Map<String, Any>?) : 
         val inputName = ortSession.inputNames.first()
         val outputName = ortSession.outputNames.first()
 
-        val inputTensor = OnnxTensor.createTensor(ortEnv, buffer, longArrayOf(1, 3, 224, 224))
+
+         val inputTensor = OnnxTensor.createTensor(ortEnv, buffer, longArrayOf(1, 3, 224, 224))
         val result = ortSession.run(mapOf(inputName to inputTensor))
         
 val output2D = result.get(outputName).get().value as? Array<FloatArray> ?: return null
@@ -109,6 +109,8 @@ for (i in output.indices) {
     }
 }
          lastPrediction = maxIdx
+
+        Log.d("TrashSorterPlugin", "$maxIdx")
         maxIdx
     } catch (e: Exception) {
         Log.e("TrashSorterPlugin", "Inference error", e)

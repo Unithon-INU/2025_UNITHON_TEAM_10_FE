@@ -19,28 +19,28 @@
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
-- (void)runTrashSorterTest {
-  NSLog(@"🔍 TrashSorterPlugin 테스트 시작");
-
-  TrashSorterPlugin* plugin = [[TrashSorterPlugin alloc] initForTesting];
-  
-  if (plugin) {
-    UIImage* testImage = [UIImage imageNamed:@"test_waste_image"]; // 번들에 있는 테스트 이미지
-
-    for (int i = 0; i < 30; i++)
-    if (testImage) {
-      NSNumber* result = [plugin runInferenceWithUIImage:testImage];
-      NSLog(@"🎯 Inference result: %@", result);
-    } else {
-      NSLog(@"❌ Failed to create PixelBuffer from UIImage");
-    }
-    
-
-  } else {
-    NSLog(@"❌ Failed to initialize TrashSorterPlugin");
-  }
-
-}
+//- (void)runTrashSorterTest {
+//  NSLog(@"🔍 TrashSorterPlugin 테스트 시작");
+//
+//  TrashSorterPlugin* plugin = [[TrashSorterPlugin alloc] initForTesting];
+//  
+//  if (plugin) {
+//    UIImage* testImage = [UIImage imageNamed:@"test_waste_image"]; // 번들에 있는 테스트 이미지
+//
+//    for (int i = 0; i < 5; i++)
+//    if (testImage) {
+//      NSNumber* result = [plugin runInferenceWithUIImage:testImage];
+//      NSLog(@"🎯 Inference result: %@", result);
+//    } else {
+//      NSLog(@"❌ Failed to create PixelBuffer from UIImage");
+//    }
+//    
+//
+//  } else {
+//    NSLog(@"❌ Failed to initialize TrashSorterPlugin");
+//  }
+//
+//}
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {

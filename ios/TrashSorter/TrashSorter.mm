@@ -17,327 +17,239 @@
 
 @implementation TrashSorterPlugin
 
+#pragma mark - Debug Helpers
+
 - (NSString *)debugLogPath {
-  NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-  NSString* documentsDirectory = [paths objectAtIndex:0];
-  return [documentsDirectory stringByAppendingPathComponent:@"onnx_debug.txt"];
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString* documentsDirectory = [paths objectAtIndex:0];
+    return [documentsDirectory stringByAppendingPathComponent:@"onnx_debug.txt"];
 }
 
 - (void)appendDebugLog:(NSString *)log {
-  NSString *logPath = [self debugLogPath];
-  NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:logPath];
-  if (!fileHandle) {
-    [log writeToFile:logPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
-  } else {
-    [fileHandle seekToEndOfFile];
-    NSString *line = [NSString stringWithFormat:@"%@\n", log];
-    [fileHandle writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
-    [fileHandle closeFile];
-  }
-}
-
-#pragma mark - Public Initializers
-
-/// VisionCamera FrameProcessor용 기본 이니셜라이저
-- (instancetype)initWithProxy:(VisionCameraProxyHolder*)proxy
-                  withOptions:(NSDictionary*)options {
-  self = [super initWithProxy:proxy withOptions:options];
-  if (self) {
-    [self setupONNXSession];
-  }
-  return self;
-}
-
-/// ✅ 테스트 전용 이니셜라이저 (VisionCamera 필요 없음)
-- (instancetype)initForTesting {
-  VisionCameraProxyHolder* dummyProxy = [[VisionCameraProxyHolder alloc] init]; // Mock Proxy 생성
-  self = [super initWithProxy:dummyProxy withOptions:nil];
-  if (self) {
-    [self setupONNXSession];
-  }
-  return self;
-}
-
-
-#pragma mark - Private Setup
-
-/// ONNX 모델 로딩 및 세션 초기화
-- (void)setupONNXSession {
-  try {
-    ortEnv = new Ort::Env(ORT_LOGGING_LEVEL_WARNING, "TrashSorterTest");
-
-    Ort::SessionOptions sessionOptions;
-    sessionOptions.SetIntraOpNumThreads(1);
-
-    NSString *modelPath = [[NSBundle mainBundle] pathForResource:@"waste_classifier" ofType:@"ort"];
-    if (!modelPath) {
-      [self appendDebugLog:@"❌ Model not found!"];
-      return;
+    NSString *logPath = [self debugLogPath];
+    NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:logPath];
+    if (!fileHandle) {
+        [log writeToFile:logPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    } else {
+        [fileHandle seekToEndOfFile];
+        NSString *line = [NSString stringWithFormat:@"%@\n", log];
+        [fileHandle writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
+        [fileHandle closeFile];
     }
-
-    ortSession = new Ort::Session(*ortEnv, [modelPath UTF8String], sessionOptions);
-
-    Ort::AllocatorWithDefaultOptions allocator;
-
-    auto inputNamePtr = ortSession->GetInputNameAllocated(0, allocator);
-    auto outputNamePtr = ortSession->GetOutputNameAllocated(0, allocator);
-
-    inputNames = {strdup(inputNamePtr.get())};
-    outputNames = {strdup(outputNamePtr.get())};
-
-    [self appendDebugLog:@"✅ TrashSorterPlugin ONNX session initialized!"];
-  }
-  catch (const Ort::Exception& e) {
-    NSLog(@"❌ ONNX Error: %s", e.what());
-    [self appendDebugLog:[NSString stringWithFormat:@"✅ ONNX Error: %s", e.what()]];
-
-    ortSession = nullptr;
-    ortEnv = nullptr;
-  }
 }
-#pragma mark - SampleBuffer -> PixelBuffer 변환
 
-- (CVPixelBufferRef _Nullable)pixelBufferFromSampleBuffer:(CMSampleBufferRef)sampleBuffer {
-  if (sampleBuffer == nil) {
-    NSLog(@"❌ sampleBuffer is nil.");
-    return nil;
-  }
+#pragma mark - Init
 
-  CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-  if (pixelBuffer == nil) {
-    NSLog(@"❌ Failed to get pixelBuffer from sampleBuffer.");
-    return nil;
-  }
-
-  // retain 없이 바로 반환해도 OK (CMSampleBuffer 내부 관리)
-  return pixelBuffer;
+- (instancetype)initWithProxy:(VisionCameraProxyHolder*)proxy withOptions:(NSDictionary*)options {
+    self = [super initWithProxy:proxy withOptions:options];
+    if (self) {
+        [self setupONNXSession];
+    }
+    return self;
 }
-#pragma mark - PixelBuffer -> UIImage 변환
+
+- (instancetype)initForTesting {
+    VisionCameraProxyHolder* dummyProxy = [[VisionCameraProxyHolder alloc] init];
+    self = [super initWithProxy:dummyProxy withOptions:nil];
+    if (self) {
+        [self setupONNXSession];
+    }
+    return self;
+}
+
+#pragma mark - ONNX Setup
+
+- (void)setupONNXSession {
+    try {
+        ortEnv = new Ort::Env(ORT_LOGGING_LEVEL_WARNING, "TrashSorterTest");
+        Ort::SessionOptions sessionOptions;
+        sessionOptions.SetIntraOpNumThreads(1);
+
+        NSString *modelPath = [[NSBundle mainBundle] pathForResource:@"waste_classifier" ofType:@"ort"];
+        if (!modelPath) {
+            [self appendDebugLog:@"❌ Model not found!"];
+            return;
+        }
+
+        ortSession = new Ort::Session(*ortEnv, [modelPath UTF8String], sessionOptions);
+
+        Ort::AllocatorWithDefaultOptions allocator;
+        auto inputNamePtr = ortSession->GetInputNameAllocated(0, allocator);
+        auto outputNamePtr = ortSession->GetOutputNameAllocated(0, allocator);
+
+        inputNames = {strdup(inputNamePtr.get())};
+        outputNames = {strdup(outputNamePtr.get())};
+
+        [self appendDebugLog:@"✅ TrashSorterPlugin ONNX session initialized!"];
+    } catch (const Ort::Exception& e) {
+        [self appendDebugLog:[NSString stringWithFormat:@"❌ ONNX Error: %s", e.what()]];
+        ortSession = nullptr;
+        ortEnv = nullptr;
+    }
+}
+
+#pragma mark - Image Handling
 
 - (UIImage* _Nullable)uiImageFromPixelBuffer:(CVPixelBufferRef)pixelBuffer {
-  if (pixelBuffer == nil) {
-    NSLog(@"❌ pixelBuffer is nil.");
-    return nil;
-  }
+    if (!pixelBuffer) {
+        [self appendDebugLog:@"❌ pixelBuffer is nil"];
+        return nil;
+    }
 
-  CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+    OSType format = CVPixelBufferGetPixelFormatType(pixelBuffer);
+    [self appendDebugLog:[NSString stringWithFormat:@"📸 PixelFormat: %u", format]];
 
-  size_t width = CVPixelBufferGetWidth(pixelBuffer);
-  size_t height = CVPixelBufferGetHeight(pixelBuffer);
-  uint8_t* baseAddress = (uint8_t*)CVPixelBufferGetBaseAddress(pixelBuffer);
-  size_t bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer);
+    if (format == kCVPixelFormatType_32BGRA) {
+        // ✅ BGRA → 그대로 변환
+        CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
 
-  CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-  CGContextRef context = CGBitmapContextCreate(
-    baseAddress,
-    width,
-    height,
-    8,
-    bytesPerRow,
-    colorSpace,
-    kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little
-  );
+        size_t width = CVPixelBufferGetWidth(pixelBuffer);
+        size_t height = CVPixelBufferGetHeight(pixelBuffer);
+        uint8_t* baseAddress = (uint8_t*)CVPixelBufferGetBaseAddress(pixelBuffer);
+        size_t bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer);
 
-  if (context == nil) {
-    NSLog(@"❌ Failed to create CGContext.");
-    CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
-    CGColorSpaceRelease(colorSpace);
-    return nil;
-  }
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        CGContextRef context = CGBitmapContextCreate(baseAddress, width, height, 8, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little);
 
-  CGImageRef quartzImage = CGBitmapContextCreateImage(context);
-  UIImage* image = [UIImage imageWithCGImage:quartzImage];
+        if (!context) {
+            CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+            CGColorSpaceRelease(colorSpace);
+            [self appendDebugLog:@"❌ Failed to create CGContext (BGRA path)"];
+            return nil;
+        }
 
-  // Clean up
-  CGImageRelease(quartzImage);
-  CGContextRelease(context);
-  CGColorSpaceRelease(colorSpace);
-  CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+        CGImageRef cgImage = CGBitmapContextCreateImage(context);
+        UIImage* image = [UIImage imageWithCGImage:cgImage];
 
-  return image;
+        CGImageRelease(cgImage);
+        CGContextRelease(context);
+        CGColorSpaceRelease(colorSpace);
+        CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+
+        return image;
+    } else if (format == kCVPixelFormatType_420YpCbCr8BiPlanarFullRange ||
+               format == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange) {
+        // ✅ YUV420 → CoreImage 변환
+        CIImage *ciImage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
+        if (!ciImage) {
+            [self appendDebugLog:@"❌ Failed to create CIImage from YUV pixel buffer"];
+            return nil;
+        }
+        CIContext *temporaryContext = [CIContext contextWithOptions:nil];
+        CGImageRef cgImage = [temporaryContext createCGImage:ciImage fromRect:CGRectMake(0, 0, CVPixelBufferGetWidth(pixelBuffer), CVPixelBufferGetHeight(pixelBuffer))];
+        UIImage *image = [UIImage imageWithCGImage:cgImage];
+        CGImageRelease(cgImage);
+        return image;
+    } else {
+        [self appendDebugLog:[NSString stringWithFormat:@"❌ Unsupported pixel format: %u", format]];
+        return nil;
+    }
 }
 
+
 - (std::vector<float>)floatBufferFromUIImage:(UIImage *)image {
-    // 이미지 리사이징 (224x224)
     CGSize size = CGSizeMake(224, 224);
     UIGraphicsBeginImageContextWithOptions(size, YES, 1.0);
     [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
     UIImage *resizedImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
-    // CGImage 획득
+
     CGImageRef cgImage = resizedImage.CGImage;
-    
-    // RGB 픽셀 데이터 추출
     size_t width = CGImageGetWidth(cgImage);
     size_t height = CGImageGetHeight(cgImage);
-    size_t bitsPerComponent = 8;
-    size_t bytesPerRow = width * 4;
-    
-    uint8_t *rawData = (uint8_t *)calloc(height * width * 4, sizeof(uint8_t));
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(rawData, width, height, bitsPerComponent, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+
+    uint8_t* rawData = (uint8_t*)calloc(height * width * 4, sizeof(uint8_t));
+    CGContextRef context = CGBitmapContextCreate(rawData, width, height, 8, width * 4, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
     CGContextDrawImage(context, CGRectMake(0, 0, width, height), cgImage);
-    
-    // 픽셀 데이터를 float 배열로 변환 (RGB 채널)
+
     std::vector<float> floatArray(3 * width * height);
-    
-    // 픽셀 값 정규화 (0-255 -> 0-1)
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            int offset = (y * width + x) * 4;
-            // R, G, B 채널 (0-1 범위로 정규화)
-            floatArray[y * width + x] = rawData[offset] / 255.0f;                   // R
-            floatArray[width * height + y * width + x] = rawData[offset + 1] / 255.0f;  // G
-            floatArray[2 * width * height + y * width + x] = rawData[offset + 2] / 255.0f; // B
+    for (size_t y = 0; y < height; y++) {
+        for (size_t x = 0; x < width; x++) {
+            size_t pixelIndex = (y * width + x) * 4;
+            float r = rawData[pixelIndex] / 255.0f;
+            float g = rawData[pixelIndex + 1] / 255.0f;
+            float b = rawData[pixelIndex + 2] / 255.0f;
+            size_t idx = y * width + x;
+            floatArray[idx] = r;
+            floatArray[width * height + idx] = g;
+            floatArray[2 * width * height + idx] = b;
         }
     }
-    
-    // 메모리 해제
+
     free(rawData);
     CGContextRelease(context);
-    CGColorSpaceRelease(colorSpace);
-    
+
+    NSMutableString* debugString = [NSMutableString stringWithString:@"🔍 Input floatBuffer sample: "];
+    for (int i = 0; i < 10 && i < floatArray.size(); i++) {
+        [debugString appendFormat:@"%.3f ", floatArray[i]];
+    }
+    [self appendDebugLog:debugString];
+
     return floatArray;
 }
 
-
-#pragma mark - 공통 추론 함수
+#pragma mark - Inference
 
 - (NSNumber* _Nullable)runInferenceWithUIImage:(UIImage*)image {
-  try {
-    if (!ortSession) {
-      NSLog(@"Session is not initilized!");
-      [self appendDebugLog:@"❌ ONNX Session isn't initialized!"];
-      return nil;
+    try {
+        if (!ortSession) return nil;
+
+        std::vector<float> inputTensorValues = [self floatBufferFromUIImage:image];
+        std::vector<int64_t> inputDims = {1, 3, 224, 224};
+
+        Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+        Ort::Value inputTensor = Ort::Value::CreateTensor<float>(memoryInfo, inputTensorValues.data(), inputTensorValues.size(), inputDims.data(), inputDims.size());
+
+        auto outputTensors = ortSession->Run(Ort::RunOptions{nullptr}, inputNames.data(), &inputTensor, 1, outputNames.data(), 1);
+        float* outputData = outputTensors[0].GetTensorMutableData<float>();
+
+        NSMutableString* outputString = [NSMutableString stringWithString:@"🔍 Output raw values: "];
+        size_t outputSize = outputTensors[0].GetTensorTypeAndShapeInfo().GetElementCount();
+        int maxIndex = -1;
+        float maxVal = -std::numeric_limits<float>::max();
+
+        for (size_t i = 0; i < outputSize; i++) {
+            if (i < 10) {
+                [outputString appendFormat:@"%.3f ", outputData[i]];
+            }
+            if (outputData[i] > maxVal) {
+                maxVal = outputData[i];
+                maxIndex = (int)i;
+            }
+        }
+
+        [self appendDebugLog:outputString];
+        [self appendDebugLog:[NSString stringWithFormat:@"🧠 Prediction: %d (%.3f)", maxIndex, maxVal]];
+
+        return @(maxIndex);
+    } catch (...) {
+        [self appendDebugLog:@"❌ Inference failed!"];
+        return nil;
     }
-
-      // UIImage에서 float 벡터 생성
-      std::vector<float> inputTensorValues = [self floatBufferFromUIImage:image];
-    [self appendDebugLog:[NSString stringWithFormat:@"✅ inputTesorValues size: %zu", inputTensorValues.size()]];
-
-      
-      // 입력 텐서 크기 및 정보 설정
-      std::vector<int64_t> inputDims = {1, 3, 224, 224};  // 배치, 채널, 높이, 너비
-      
-      // 메모리 정보
-      Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
-    [self appendDebugLog:[NSString stringWithFormat:@"✅ memory created: %s", memoryInfo.GetConst().GetAllocatorName().c_str()]];
-      // 입력 텐서 생성
-      Ort::Value inputTensor = Ort::Value::CreateTensor<float>(
-          memoryInfo,
-          inputTensorValues.data(),
-          inputTensorValues.size(),
-          inputDims.data(),
-          inputDims.size()
-      );
-    [self appendDebugLog:[NSString stringWithFormat:@"✅ inputTensor created. isTensor: %b", inputTensor.GetConst().IsTensor()]];
-    [self appendDebugLog:@"🚀 Running Inference... "];
-
-      
-      // 모델 실행
-      std::vector<Ort::Value> outputTensors = ortSession->Run(
-          Ort::RunOptions{nullptr},
-          inputNames.data(),
-          &inputTensor,
-          1,
-          outputNames.data(),
-          1
-      );
-    [self appendDebugLog:@"✅ Inference done!"];
-
-      
-      // 결과 처리
-      float* outputData = outputTensors[0].GetTensorMutableData<float>();
-    [self appendDebugLog:[NSString stringWithFormat:@"✅ outputData size: %lu", sizeof outputData]];
-
-      
-      // 텐서 정보 가져오기
-      Ort::TypeInfo typeInfo = outputTensors[0].GetTypeInfo();
-    [self appendDebugLog:@"✅ typeInfo done!"];
-
-
-      const Ort::ConstTensorTypeAndShapeInfo tensorInfo = typeInfo.GetTensorTypeAndShapeInfo();
-    [self appendDebugLog:@"✅ tensorInfo done!"];
-
-      std::vector<int64_t> outputDims = tensorInfo.GetShape();
-    [self appendDebugLog:[NSString stringWithFormat:@"✅ GetShape done! size: %lu", outputDims.size()]];
-
-      size_t outputSize = 1;
-      for (size_t i = 0; i < outputDims.size(); i++) {
-          if (outputDims[i] > 0) {
-              outputSize *= outputDims[i];
-          }
-      }
-    
-    [self appendDebugLog:[NSString stringWithFormat:@"✅ outputSize: %lu", outputSize]];
-
-      
-      // 최대값과 해당 인덱스 찾기
-      int maxIndex = -1;
-      float maxValue = -std::numeric_limits<float>::max();
-      
-      for (size_t i = 0; i < outputSize; i++) {
-          if (outputData[i] > maxValue) {
-              maxValue = outputData[i];
-              maxIndex = static_cast<int>(i);
-          }
-      }
-      
-      // 인덱스 반환
-    [self appendDebugLog:[NSString stringWithFormat:@"✅ Prediction: %d", maxIndex]];
-
-      return @(maxIndex);
-  }
-  catch (const Ort::Exception& e) {
-      NSLog(@"ONNX Runtime Error during inference: %s", e.what());
-      return nil;
-  }
-  catch (const std::exception& e) {
-      NSLog(@"Standard exception during inference: %s", e.what());
-      return nil;
-  }
-  catch (...) {
-      NSLog(@"Unknown error during inference");
-      return nil;
-  }
-  
 }
 
-#pragma mark - VisionCamera Frame에서 호출
+#pragma mark - Frame Callback
 
 - (NSNumber* _Nullable)callback:(Frame* _Nonnull)frame withArguments:(NSDictionary* _Nullable)arguments {
-  CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(frame.buffer);
-  [self appendDebugLog:@"✅ PixelBuffer taken from SampleBuffer OK"];
-  UIImage* image = [self uiImageFromPixelBuffer:pixelBuffer];
-  [self appendDebugLog:@"✅ UIImage from PixelBuffer OK"];
-  if (!pixelBuffer) {
-    [self appendDebugLog:@"❌ pixelBuffer is nil."];
-    return nil;
-  }
-  [self appendDebugLog:@"🚀 Running inference with UIImage! "];
-  return [self runInferenceWithUIImage:image];
+    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(frame.buffer);
+    [self appendDebugLog:[NSString stringWithFormat:@"🔍 Frame received: %zu x %zu", CVPixelBufferGetWidth(pixelBuffer), CVPixelBufferGetHeight(pixelBuffer)]];
+
+    UIImage* image = [self uiImageFromPixelBuffer:pixelBuffer];
+    if (!image) {
+        [self appendDebugLog:@"❌ UIImage conversion failed."];
+        return nil;
+    }
+
+    return [self runInferenceWithUIImage:image];
 }
 
-
-
-
+#pragma mark - Dealloc
 
 - (void)dealloc {
-  // 리소스 정리
     for (auto ptr : inputNames) if (ptr) free((void*)ptr);
     for (auto ptr : outputNames) if (ptr) free((void*)ptr);
-
-    
-    if (ortSession) {
-        delete ortSession;
-        ortSession = nullptr;
-    }
-    if (ortEnv) {
-        delete ortEnv;
-        ortEnv = nullptr;
-    }
-    
+    if (ortSession) delete ortSession;
+    if (ortEnv) delete ortEnv;
 }
 
 VISION_EXPORT_FRAME_PROCESSOR(TrashSorterPlugin, runWasteClassifier)
