@@ -2,6 +2,8 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
+#import "TrashSorter.h" // TrashSorterPlugin 헤더를 직접 임포트
+
 
 @implementation AppDelegate
 
@@ -12,8 +14,32 @@
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
+//  [self runTrashSorterTest];
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+
+- (void)runTrashSorterTest {
+  NSLog(@"🔍 TrashSorterPlugin 테스트 시작");
+
+  TrashSorterPlugin* plugin = [[TrashSorterPlugin alloc] initForTesting];
+  
+  if (plugin) {
+    UIImage* testImage = [UIImage imageNamed:@"test_waste_image"]; // 번들에 있는 테스트 이미지
+
+    for (int i = 0; i < 30; i++)
+    if (testImage) {
+      NSNumber* result = [plugin runInferenceWithUIImage:testImage];
+      NSLog(@"🎯 Inference result: %@", result);
+    } else {
+      NSLog(@"❌ Failed to create PixelBuffer from UIImage");
+    }
+    
+
+  } else {
+    NSLog(@"❌ Failed to initialize TrashSorterPlugin");
+  }
+
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
