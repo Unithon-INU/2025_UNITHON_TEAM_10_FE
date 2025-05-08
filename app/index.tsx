@@ -1,5 +1,6 @@
 // import { runOnJS } from "react-native-reanimated";
 
+import { useIsFocused } from "@react-navigation/native";
 import { Asset } from "expo-asset";
 
 import React, { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ import {
 } from "react-native-vision-camera";
 
 import { useRunOnJS, useSharedValue, Worklets } from "react-native-worklets-core";
+import useAppState from "./hooks/useAppState";
 
 const plugin = VisionCameraProxy.initFrameProcessorPlugin(
   "runWasteClassifier",
@@ -35,7 +37,6 @@ export default function Index() {
       "worklet";
       if (frame.isValid) {
         const output = plugin?.call(frame) as number;
-        
         runOnJS(output)
       }
     });
@@ -56,6 +57,13 @@ export default function Index() {
       alert(codes[0].value);
     },
   });
+
+  // Android 15에 대응하기 위해 앱이 포그라운드에서 활성상태인 경우에만 카메라를 활성화합니다.
+  const isFocused = useIsFocused();
+  const appState = useAppState();
+  const isActive = isFocused && appState === "active";
+
+
   if (!hasPermission) {
     requestPermission();
 
@@ -83,16 +91,17 @@ export default function Index() {
       <Camera
         style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
         device={device}
-        isActive
+        isActive={isActive}
         onError={(e) => {
+          console.error(e)
           alert(e);
         }}
         // codeScanner={codeScanner}
         frameProcessor={frameProcessor}
-        // photoQualityBalance="speed"
-        // photo={false}
-        // video={false}
-        // audio={false}
+        photoQualityBalance="speed"
+        photo={false}
+        video={false}
+        audio={false}
       />
       <Text
         style={{
