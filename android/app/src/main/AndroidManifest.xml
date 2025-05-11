@@ -30,5 +30,6 @@
         <data android:scheme="com.gang_03.where2throw"/>
       </intent-filter>
     </activity>
+    <uses-native-library android:name="libOpenCL.so" android:required="false"/>
   </application>
 </manifest>

@@ -1,21 +1,75 @@
 #import <VisionCamera/FrameProcessorPlugin.h>
-#import <VisionCamera/FrameProcessorPluginRegistry.h>
 #import <VisionCamera/VisionCameraProxyHolder.h>
 #import <VisionCamera/Frame.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <CoreMedia/CoreMedia.h>
-#import <onnxruntime_cxx_api.h>
+
+#import <Foundation/Foundation.h>
+#import <CoreML/CoreML.h>
+#import <CoreVideo/CoreVideo.h>
+#import "Yolo11N.h"
 
 @interface TrashSorterPlugin : FrameProcessorPlugin {
-    Ort::Env *ortEnv;
-    Ort::Session *ortSession;
-    std::vector<const char*> inputNames;
-    std::vector<const char*> outputNames;
+    Yolo11N *model;
+    NSArray<NSString *> *classNames;
+    CIContext *ciContext;
+
 }
 @end
 
 @implementation TrashSorterPlugin
+
+#pragma mark - Image Processing
+- (CVPixelBufferRef)convertAndResizePixelBuffer:(CVPixelBufferRef)sourceBuffer
+                                       outScale:(float *)scale
+                                       outPadX:(float *)padX
+                                       outPadY:(float *)padY
+                                       outWidth:(size_t *)originalWidth
+                                       outHeight:(size_t *)originalHeight {
+    size_t sourceWidth = CVPixelBufferGetWidth(sourceBuffer);
+    size_t sourceHeight = CVPixelBufferGetHeight(sourceBuffer);
+
+    if (originalWidth) *originalWidth = sourceWidth;
+    if (originalHeight) *originalHeight = sourceHeight;
+
+    float s = MIN(640.0 / sourceWidth, 640.0 / sourceHeight);
+    if (scale) *scale = s;
+
+    float scaledWidth = sourceWidth * s;
+    float scaledHeight = sourceHeight * s;
+
+    float pX = (640.0 - scaledWidth) / 2.0;
+    float pY = (640.0 - scaledHeight) / 2.0;
+    if (padX) *padX = pX;
+    if (padY) *padY = pY;
+
+
+    OSType sourcePixelFormat = CVPixelBufferGetPixelFormatType(sourceBuffer);
+    
+    CIImage *ciImage = [CIImage imageWithCVPixelBuffer:sourceBuffer];
+    // Resize
+    ciImage = [ciImage imageByApplyingTransform:CGAffineTransformMakeScale(s,s)];
+    ciImage = [ciImage imageByApplyingTransform:CGAffineTransformMakeTranslation(pX, pY)];
+
+    // Destination buffer
+    CVPixelBufferRef destPixelBuffer = NULL;
+    NSDictionary *attrs = @{
+        (id)kCVPixelBufferCGImageCompatibilityKey: @YES,
+        (id)kCVPixelBufferCGBitmapContextCompatibilityKey: @YES
+    };
+    
+    CVPixelBufferCreate(kCFAllocatorDefault,
+                        640, 640,
+                        kCVPixelFormatType_32BGRA,
+                        (__bridge CFDictionaryRef)attrs,
+                        &destPixelBuffer);
+    
+    [self->ciContext render:ciImage toCVPixelBuffer:destPixelBuffer];
+
+
+    return destPixelBuffer;
+}
 
 #pragma mark - Debug Helpers
 
@@ -43,7 +97,7 @@
 - (instancetype)initWithProxy:(VisionCameraProxyHolder*)proxy withOptions:(NSDictionary*)options {
     self = [super initWithProxy:proxy withOptions:options];
     if (self) {
-        [self setupONNXSession];
+        [self setupModel];
     }
     return self;
 }
@@ -52,205 +106,157 @@
     VisionCameraProxyHolder* dummyProxy = [[VisionCameraProxyHolder alloc] init];
     self = [super initWithProxy:dummyProxy withOptions:nil];
     if (self) {
-        [self setupONNXSession];
+        [self setupModel];
     }
     return self;
 }
 
-#pragma mark - ONNX Setup
+#pragma mark - Model Setup
 
-- (void)setupONNXSession {
-    try {
-        ortEnv = new Ort::Env(ORT_LOGGING_LEVEL_WARNING, "TrashSorterTest");
-        Ort::SessionOptions sessionOptions;
-        sessionOptions.SetIntraOpNumThreads(1);
-
-        NSString *modelPath = [[NSBundle mainBundle] pathForResource:@"waste_classifier" ofType:@"ort"];
-        if (!modelPath) {
-            [self appendDebugLog:@"❌ Model not found!"];
-            return;
-        }
-
-        ortSession = new Ort::Session(*ortEnv, [modelPath UTF8String], sessionOptions);
-
-        Ort::AllocatorWithDefaultOptions allocator;
-        auto inputNamePtr = ortSession->GetInputNameAllocated(0, allocator);
-        auto outputNamePtr = ortSession->GetOutputNameAllocated(0, allocator);
-
-        inputNames = {strdup(inputNamePtr.get())};
-        outputNames = {strdup(outputNamePtr.get())};
-
-        [self appendDebugLog:@"✅ TrashSorterPlugin ONNX session initialized!"];
-    } catch (const Ort::Exception& e) {
-        [self appendDebugLog:[NSString stringWithFormat:@"❌ ONNX Error: %s", e.what()]];
-        ortSession = nullptr;
-        ortEnv = nullptr;
+- (void)setupModel {
+    NSError *error = nil;
+    model = [[Yolo11N alloc] init];
+    
+    if (!model) {
+        NSLog(@"[TrashSorterPlugin] Failed to initialize Yolo11N model: %@", error);
+        return;
     }
+  self->ciContext = [CIContext contextWithOptions:nil];
+    
+
+  NSLog(@"✅ Yolo11N model initialized successfully");
 }
 
-#pragma mark - Image Handling
+#pragma mark - Frame Processing
 
-- (UIImage* _Nullable)uiImageFromPixelBuffer:(CVPixelBufferRef)pixelBuffer {
-    if (!pixelBuffer) {
-        [self appendDebugLog:@"❌ pixelBuffer is nil"];
-        return nil;
-    }
-
-    OSType format = CVPixelBufferGetPixelFormatType(pixelBuffer);
-    [self appendDebugLog:[NSString stringWithFormat:@"📸 PixelFormat: %u", format]];
-
-    if (format == kCVPixelFormatType_32BGRA) {
-        // ✅ BGRA → 그대로 변환
-        CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
-
-        size_t width = CVPixelBufferGetWidth(pixelBuffer);
-        size_t height = CVPixelBufferGetHeight(pixelBuffer);
-        uint8_t* baseAddress = (uint8_t*)CVPixelBufferGetBaseAddress(pixelBuffer);
-        size_t bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer);
-
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-        CGContextRef context = CGBitmapContextCreate(baseAddress, width, height, 8, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little);
-
-        if (!context) {
-            CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
-            CGColorSpaceRelease(colorSpace);
-            [self appendDebugLog:@"❌ Failed to create CGContext (BGRA path)"];
+- (id _Nullable)callback:(Frame* _Nonnull)frame withArguments:(NSDictionary* _Nullable)arguments {
+    @autoreleasepool {
+        CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(frame.buffer);
+        if (!pixelBuffer) {
+            [self appendDebugLog:@"❌ Null pixel buffer received"];
             return nil;
         }
 
-        CGImageRef cgImage = CGBitmapContextCreateImage(context);
-        UIImage* image = [UIImage imageWithCGImage:cgImage];
+        NSLog(@"🔍 Processing frame: %zu x %zu",
+              CVPixelBufferGetWidth(pixelBuffer),
+              CVPixelBufferGetHeight(pixelBuffer));
+      
+        float scale, padX, padY;
+        size_t originalWidth, originalHeight;
 
-        CGImageRelease(cgImage);
-        CGContextRelease(context);
-        CGColorSpaceRelease(colorSpace);
-        CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
 
-        return image;
-    } else if (format == kCVPixelFormatType_420YpCbCr8BiPlanarFullRange ||
-               format == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange) {
-        // ✅ YUV420 → CoreImage 변환
-        CIImage *ciImage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
-        if (!ciImage) {
-            [self appendDebugLog:@"❌ Failed to create CIImage from YUV pixel buffer"];
+      CVPixelBufferRef processedBuffer = [self convertAndResizePixelBuffer:pixelBuffer
+                                                                  outScale:&scale
+                                                                   outPadX:&padX
+                                                                   outPadY:&padY
+                                                                 outWidth:&originalWidth
+                                                                outHeight:&originalHeight];
+        if (!processedBuffer) {
+            NSLog(@"❌ Failed to process image");
             return nil;
         }
-        CIContext *temporaryContext = [CIContext contextWithOptions:nil];
-        CGImageRef cgImage = [temporaryContext createCGImage:ciImage fromRect:CGRectMake(0, 0, CVPixelBufferGetWidth(pixelBuffer), CVPixelBufferGetHeight(pixelBuffer))];
-        UIImage *image = [UIImage imageWithCGImage:cgImage];
-        CGImageRelease(cgImage);
-        return image;
-    } else {
-        [self appendDebugLog:[NSString stringWithFormat:@"❌ Unsupported pixel format: %u", format]];
-        return nil;
-    }
-}
 
-
-- (std::vector<float>)floatBufferFromUIImage:(UIImage *)image {
-    CGSize size = CGSizeMake(224, 224);
-    UIGraphicsBeginImageContextWithOptions(size, YES, 1.0);
-    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
-    UIImage *resizedImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
-    CGImageRef cgImage = resizedImage.CGImage;
-    size_t width = CGImageGetWidth(cgImage);
-    size_t height = CGImageGetHeight(cgImage);
-
-    uint8_t* rawData = (uint8_t*)calloc(height * width * 4, sizeof(uint8_t));
-    CGContextRef context = CGBitmapContextCreate(rawData, width, height, 8, width * 4, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
-    CGContextDrawImage(context, CGRectMake(0, 0, width, height), cgImage);
-
-    std::vector<float> floatArray(3 * width * height);
-    for (size_t y = 0; y < height; y++) {
-        for (size_t x = 0; x < width; x++) {
-            size_t pixelIndex = (y * width + x) * 4;
-            float r = rawData[pixelIndex] / 255.0f;
-            float g = rawData[pixelIndex + 1] / 255.0f;
-            float b = rawData[pixelIndex + 2] / 255.0f;
-            size_t idx = y * width + x;
-            floatArray[idx] = r;
-            floatArray[width * height + idx] = g;
-            floatArray[2 * width * height + idx] = b;
-        }
-    }
-
-    free(rawData);
-    CGContextRelease(context);
-
-    NSMutableString* debugString = [NSMutableString stringWithString:@"🔍 Input floatBuffer sample: "];
-    for (int i = 0; i < 10 && i < floatArray.size(); i++) {
-        [debugString appendFormat:@"%.3f ", floatArray[i]];
-    }
-    [self appendDebugLog:debugString];
-
-    return floatArray;
-}
-
-#pragma mark - Inference
-
-- (NSNumber* _Nullable)runInferenceWithUIImage:(UIImage*)image {
-    try {
-        if (!ortSession) return nil;
-
-        std::vector<float> inputTensorValues = [self floatBufferFromUIImage:image];
-        std::vector<int64_t> inputDims = {1, 3, 224, 224};
-
-        Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
-        Ort::Value inputTensor = Ort::Value::CreateTensor<float>(memoryInfo, inputTensorValues.data(), inputTensorValues.size(), inputDims.data(), inputDims.size());
-
-        auto outputTensors = ortSession->Run(Ort::RunOptions{nullptr}, inputNames.data(), &inputTensor, 1, outputNames.data(), 1);
-        float* outputData = outputTensors[0].GetTensorMutableData<float>();
-
-        NSMutableString* outputString = [NSMutableString stringWithString:@"🔍 Output raw values: "];
-        size_t outputSize = outputTensors[0].GetTensorTypeAndShapeInfo().GetElementCount();
-        int maxIndex = -1;
-        float maxVal = -std::numeric_limits<float>::max();
-
-        for (size_t i = 0; i < outputSize; i++) {
-            if (i < 10) {
-                [outputString appendFormat:@"%.3f ", outputData[i]];
-            }
-            if (outputData[i] > maxVal) {
-                maxVal = outputData[i];
-                maxIndex = (int)i;
-            }
+        float iouThreshold = 0.5;
+        float confidenceThreshold = 0.5;
+        if (arguments != nil) {
+            if (arguments[@"iouThreshold"] != nil)
+                iouThreshold = [arguments[@"iouThreshold"] floatValue];
+            if (arguments[@"confidenceThreshold"] != nil)
+                confidenceThreshold = [arguments[@"confidenceThreshold"] floatValue];
         }
 
-        [self appendDebugLog:outputString];
-        [self appendDebugLog:[NSString stringWithFormat:@"🧠 Prediction: %d (%.3f)", maxIndex, maxVal]];
+        NSError *error = nil;
+        Yolo11NInput *input = [[Yolo11NInput alloc] initWithImage:processedBuffer
+                                                      iouThreshold:iouThreshold
+                                              confidenceThreshold:confidenceThreshold];
 
-        return @(maxIndex);
-    } catch (...) {
-        [self appendDebugLog:@"❌ Inference failed!"];
-        return nil;
+        Yolo11NOutput *output = [model predictionFromFeatures:input error:&error];
+
+        // ✅ 해제: processedBuffer
+        CVPixelBufferRelease(processedBuffer);
+        processedBuffer = NULL;
+
+        if (error || !output) {
+            [self appendDebugLog:[NSString stringWithFormat:@"❌ Prediction failed: %@", error]];
+            NSLog(@"[TrashSorterPlugin] Prediction failed: %@", error);
+            return nil;
+        }
+
+        MLMultiArray *coordinates = output.coordinates;
+        MLMultiArray *confidence = output.confidence;
+
+        if (!coordinates || !confidence) {
+            [self appendDebugLog:@"❌ Invalid prediction output"];
+            return nil;
+        }
+
+        NSUInteger boxCount = coordinates.shape[0].unsignedIntegerValue;
+        NSUInteger classCount = confidence.shape[1].unsignedIntegerValue;
+        NSMutableArray *results = [NSMutableArray array];
+
+        for (NSUInteger i = 0; i < boxCount; i++) {
+            float maxConfidence = 0;
+            NSUInteger classIdx = 0;
+
+            for (NSUInteger c = 0; c < classCount; c++) {
+                NSArray<NSNumber *> *confIndices = @[@(i), @(c)];
+                float conf = [confidence[confIndices] floatValue];
+                if (conf > maxConfidence) {
+                    maxConfidence = conf;
+                    classIdx = c;
+                }
+            }
+
+            if (maxConfidence >= confidenceThreshold) {
+                NSArray<NSNumber *> *xIndices = @[@(i), @(0)];
+                NSArray<NSNumber *> *yIndices = @[@(i), @(1)];
+                NSArray<NSNumber *> *wIndices = @[@(i), @(2)];
+                NSArray<NSNumber *> *hIndices = @[@(i), @(3)];
+
+              float xCenter = [coordinates[xIndices] floatValue];
+              float yCenter = [coordinates[yIndices] floatValue];
+              float width = [coordinates[wIndices] floatValue];
+              float height = [coordinates[hIndices] floatValue];
+
+              // 이미 절대값이라면 그대로 사용
+              float left = (xCenter) - width / 2.0;
+              float top = (yCenter) - height / 2.0; // yCenter만 정규화 상태니까 곱해줌
+
+  
+
+                NSDictionary *detection =
+              @{
+                    @"classId": @(classIdx),
+                    @"confidence": @(maxConfidence),
+                    @"box": @{
+                        @"x": @(left),
+                        @"y": @(top),
+                        @"width": @(width),
+                        @"height": @(height)
+                    }
+                
+                };
+                [results addObject:detection];
+            }
+        }
+
+        // ✅ 해제: CoreML 객체 nil 처리
+        coordinates = nil;
+        confidence = nil;
+        output = nil;
+        input = nil;
+
+      return  @{
+        @"detections": results,
+        @"scale": @(scale),
+        @"padX": @(padX),
+        @"padY": @(padY),
+        @"frameWidth": @(originalWidth),
+        @"frameHeight": @(originalHeight)
+      };
     }
 }
 
-#pragma mark - Frame Callback
-
-- (NSNumber* _Nullable)callback:(Frame* _Nonnull)frame withArguments:(NSDictionary* _Nullable)arguments {
-    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(frame.buffer);
-    [self appendDebugLog:[NSString stringWithFormat:@"🔍 Frame received: %zu x %zu", CVPixelBufferGetWidth(pixelBuffer), CVPixelBufferGetHeight(pixelBuffer)]];
-
-    UIImage* image = [self uiImageFromPixelBuffer:pixelBuffer];
-    if (!image) {
-        [self appendDebugLog:@"❌ UIImage conversion failed."];
-        return nil;
-    }
-
-    return [self runInferenceWithUIImage:image];
-}
-
-#pragma mark - Dealloc
-
-- (void)dealloc {
-    for (auto ptr : inputNames) if (ptr) free((void*)ptr);
-    for (auto ptr : outputNames) if (ptr) free((void*)ptr);
-    if (ortSession) delete ortSession;
-    if (ortEnv) delete ortEnv;
-}
 
 VISION_EXPORT_FRAME_PROCESSOR(TrashSorterPlugin, runWasteClassifier)
 

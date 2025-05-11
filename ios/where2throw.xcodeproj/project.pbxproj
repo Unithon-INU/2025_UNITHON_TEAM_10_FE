@@ -7,41 +7,41 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		127ABBE05BDEA0673123F435 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F30247F92BFAB62C990C0044 /* PrivacyInfo.xcprivacy */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		3B76C4838E3B6904DEA10BA6 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A25851D4633E4C131738266F /* PrivacyInfo.xcprivacy */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		6E178B0938E5461B9F71DEB1 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F3DBD4C2347A3AA02AA8D /* noop-file.swift */; };
 		96905EF65AED1B983A6B3ABC /* libPods-where2throw.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-where2throw.a */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
+		B5D2C425621841C5A79B36DF /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD0D47D0512740F2A24F5E84 /* CoreML.framework */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		D401F9DB519747F09D3F5F8D /* TrashSorter.mm in Sources */ = {isa = PBXBuildFile; fileRef = FCDF87E191CC48BBAFB9B2CB /* TrashSorter.mm */; };
-		D57785292DBC7AFE0019A130 /* waste_classifier.ort in Resources */ = {isa = PBXBuildFile; fileRef = D57785272DBA7D050019A130 /* waste_classifier.ort */; };
-		D577852E2DBCE9770019A130 /* test_waste_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D577852D2DBCE9770019A130 /* test_waste_image.jpg */; };
+		D5E98DAF2DD06BE9009A3406 /* TrashSorter.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5E98DAD2DD06BE9009A3406 /* TrashSorter.mm */; };
+		D5E98DB32DD06E8D009A3406 /* Yolo11N.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = D5E98DB22DD06E8D009A3406 /* Yolo11N.mlpackage */; };
+		F58E69384E7B4626A4F204BB /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C8E7A9D0D54E139CAB65CA /* noop-file.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		10A2FD87EF5A4E839E1A148A /* where2throw-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "where2throw-Bridging-Header.h"; path = "where2throw/where2throw-Bridging-Header.h"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* where2throw.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = where2throw.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = where2throw/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = where2throw/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = where2throw/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = where2throw/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = where2throw/main.m; sourceTree = "<group>"; };
-		393F3DBD4C2347A3AA02AA8D /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "where2throw/noop-file.swift"; sourceTree = "<group>"; };
+		13C8E7A9D0D54E139CAB65CA /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "where2throw/noop-file.swift"; sourceTree = "<group>"; };
 		58EEBF8E8E6FB1BC6CAF49B5 /* libPods-where2throw.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-where2throw.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C2E3173556A471DD304B334 /* Pods-where2throw.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-where2throw.debug.xcconfig"; path = "Target Support Files/Pods-where2throw/Pods-where2throw.debug.xcconfig"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-where2throw.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-where2throw.release.xcconfig"; path = "Target Support Files/Pods-where2throw/Pods-where2throw.release.xcconfig"; sourceTree = "<group>"; };
-		8B84B58E9BE04F0597F69CC2 /* where2throw-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "where2throw-Bridging-Header.h"; path = "where2throw/where2throw-Bridging-Header.h"; sourceTree = "<group>"; };
-		A25851D4633E4C131738266F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = where2throw/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = where2throw/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		D57785272DBA7D050019A130 /* waste_classifier.ort */ = {isa = PBXFileReference; lastKnownFileType = file; name = waste_classifier.ort; path = ../android/app/src/main/assets/waste_classifier.ort; sourceTree = "<group>"; };
-		D577852C2DBCE02B0019A130 /* TrashSorter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrashSorter.h; sourceTree = "<group>"; };
-		D577852D2DBCE9770019A130 /* test_waste_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test_waste_image.jpg; sourceTree = "<group>"; };
+		CD0D47D0512740F2A24F5E84 /* CoreML.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
+		D5E98DAC2DD06BE9009A3406 /* TrashSorter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrashSorter.h; sourceTree = "<group>"; };
+		D5E98DAD2DD06BE9009A3406 /* TrashSorter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TrashSorter.mm; sourceTree = "<group>"; };
+		D5E98DB22DD06E8D009A3406 /* Yolo11N.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = Yolo11N.mlpackage; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F30247F92BFAB62C990C0044 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = where2throw/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-where2throw/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		FCDF87E191CC48BBAFB9B2CB /* TrashSorter.mm */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; path = TrashSorter.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +50,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96905EF65AED1B983A6B3ABC /* libPods-where2throw.a in Frameworks */,
+				B5D2C425621841C5A79B36DF /* CoreML.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +60,7 @@
 		13B07FAE1A68108700A75B9A /* where2throw */ = {
 			isa = PBXGroup;
 			children = (
+				D5E98DAE2DD06BE9009A3406 /* TrashSorter */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -66,9 +68,10 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				393F3DBD4C2347A3AA02AA8D /* noop-file.swift */,
-				8B84B58E9BE04F0597F69CC2 /* where2throw-Bridging-Header.h */,
-				A25851D4633E4C131738266F /* PrivacyInfo.xcprivacy */,
+				13C8E7A9D0D54E139CAB65CA /* noop-file.swift */,
+				10A2FD87EF5A4E839E1A148A /* where2throw-Bridging-Header.h */,
+				F30247F92BFAB62C990C0044 /* PrivacyInfo.xcprivacy */,
+				D5E98DB22DD06E8D009A3406 /* Yolo11N.mlpackage */,
 			);
 			name = where2throw;
 			sourceTree = "<group>";
@@ -78,6 +81,7 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				58EEBF8E8E6FB1BC6CAF49B5 /* libPods-where2throw.a */,
+				CD0D47D0512740F2A24F5E84 /* CoreML.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -92,15 +96,12 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				D57785272DBA7D050019A130 /* waste_classifier.ort */,
 				13B07FAE1A68108700A75B9A /* where2throw */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				D65327D7A22EEC0BE12398D9 /* Pods */,
 				D7E4C46ADA2E9064B798F356 /* ExpoModulesProviders */,
-				92CE73211F94489BB7D67979 /* TrashSorter */,
-				D577852D2DBCE9770019A130 /* test_waste_image.jpg */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -113,15 +114,6 @@
 				13B07F961A680F5B00A75B9A /* where2throw.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		92CE73211F94489BB7D67979 /* TrashSorter */ = {
-			isa = PBXGroup;
-			children = (
-				D577852C2DBCE02B0019A130 /* TrashSorter.h */,
-				FCDF87E191CC48BBAFB9B2CB /* TrashSorter.mm */,
-			);
-			path = TrashSorter;
 			sourceTree = "<group>";
 		};
 		92DBD88DE9BF7D494EA9DA96 /* where2throw */ = {
@@ -139,6 +131,15 @@
 			);
 			name = Supporting;
 			path = where2throw/Supporting;
+			sourceTree = "<group>";
+		};
+		D5E98DAE2DD06BE9009A3406 /* TrashSorter */ = {
+			isa = PBXGroup;
+			children = (
+				D5E98DAC2DD06BE9009A3406 /* TrashSorter.h */,
+				D5E98DAD2DD06BE9009A3406 /* TrashSorter.mm */,
+			);
+			path = TrashSorter;
 			sourceTree = "<group>";
 		};
 		D65327D7A22EEC0BE12398D9 /* Pods */ = {
@@ -166,13 +167,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "where2throw" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				2079A1D55911C8355CB37FA8 /* [Expo] Configure project */,
+				64F1C1D7A62681AFDEBBCEBA /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				E6B1A34BDACEC1D47DE04E44 /* [CP] Embed Pods Frameworks */,
+				F713F4B9E1B4FC4AF82E9274 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -193,6 +194,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1250;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -219,12 +221,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D577852E2DBCE9770019A130 /* test_waste_image.jpg in Resources */,
-				D57785292DBC7AFE0019A130 /* waste_classifier.ort in Resources */,
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				3B76C4838E3B6904DEA10BA6 /* PrivacyInfo.xcprivacy in Resources */,
+				127ABBE05BDEA0673123F435 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,7 +268,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2079A1D55911C8355CB37FA8 /* [Expo] Configure project */ = {
+		64F1C1D7A62681AFDEBBCEBA /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -301,6 +301,8 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly/RCT-Folly_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TensorFlowLiteC/TensorFlowLiteC.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TensorFlowLiteC/TensorFlowLiteCCoreML.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/boost/boost_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/glog/glog_privacy.bundle",
 			);
@@ -313,6 +315,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCT-Folly_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TensorFlowLiteC.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TensorFlowLiteCCoreML.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/glog_privacy.bundle",
 			);
@@ -321,7 +325,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-where2throw/Pods-where2throw-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E6B1A34BDACEC1D47DE04E44 /* [CP] Embed Pods Frameworks */ = {
+		F713F4B9E1B4FC4AF82E9274 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -349,8 +353,9 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
-				6E178B0938E5461B9F71DEB1 /* noop-file.swift in Sources */,
-				D401F9DB519747F09D3F5F8D /* TrashSorter.mm in Sources */,
+				D5E98DAF2DD06BE9009A3406 /* TrashSorter.mm in Sources */,
+				F58E69384E7B4626A4F204BB /* noop-file.swift in Sources */,
+				D5E98DB32DD06E8D009A3406 /* Yolo11N.mlpackage in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,6 +369,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = where2throw/where2throw.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COREML_CODEGEN_LANGUAGE = "Objective-C";
+				COREML_CODEGEN_SWIFT_GLOBAL_MODULE = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VZY6JC8VH5;
 				ENABLE_BITCODE = NO;
@@ -437,7 +446,7 @@
 					"\"${PODS_ROOT}/Headers/Public/fmt\"",
 					"\"${PODS_ROOT}/Headers/Public/glog\"",
 					"\"${PODS_ROOT}/Headers/Public/hermes-engine\"",
-					"$(SRCROOT)/../node_modules/react-native-vision-camera/ios/FrameProcessors/**",
+					"$(SRCROOT)/../node_modules/react-native-vision-camera/ios/FrameProcessors",
 					"\"${PODS_ROOT}/Headers/Public/onnxruntime-mobile-c\"",
 					"\"${PODS_ROOT}/Headers/Public/react-native-safe-area-context\"",
 					"\"${PODS_ROOT}/Headers/Public/react-native-webview\"",
@@ -466,6 +475,91 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DoubleConversion\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Expo\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoAsset\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoBlur\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFont\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHaptics\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHead\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoKeepAwake\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoLinking\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoModulesCore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSplashScreen\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSymbols\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoWebBrowser\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCTDeprecation\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCTTypeSafety\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNGestureHandler\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNReanimated\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNScreens\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-CoreModules\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-FabricComponents\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-FabricImage\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-ImageManager\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Mapbuffer\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTAnimation\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTAppDelegate\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTBlob\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTFabric\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTImage\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTLinking\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTNetwork\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTSettings\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTText\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTVibration\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RuntimeApple\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RuntimeCore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RuntimeHermes\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-debug\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-defaultsnativemodule\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-domnativemodule\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-featureflags\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-featureflagsnativemodule\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-hermes\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-idlecallbacksnativemodule\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jserrorhandler\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsi\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsiexecutor\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsinspector\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-logger\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-microtasksnativemodule\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-nativeconfig\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-perflogger\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-performancetimeline\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-rendererconsistency\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-rendererdebug\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-runtimescheduler\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-utils\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ReactCodegen\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SocketRocket\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/VisionCamera\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Yoga\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/fmt\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/glog\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-fast-tflite\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-safe-area-context\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-skia\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-webview\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-worklets-core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/vision-camera-resize-plugin\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/react-native-skia\"",
+					"\"${TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}\"",
+					"/usr/lib/swift/**",
+					"$(SRCROOT)/../node_modules/react-native-vision-camera/ios/FrameProcessors",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -475,6 +569,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.gang-03.where2throw";
 				PRODUCT_NAME = where2throw;
+				SWIFT_INCLUDE_PATHS = "$(inherited) \"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants\" \"${PODS_CONFIGURATION_BUILD_DIR}/Expo\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoAsset\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoBlur\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFont\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHaptics\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHead\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoKeepAwake\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoLinking\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoModulesCore\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSplashScreen\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSymbols\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoWebBrowser\" \"${PODS_CONFIGURATION_BUILD_DIR}/VisionCamera\" $(SRCROOT)/../node_modules/react-native-vision-camera/ios/FrameProcessors/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "where2throw/where2throw-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -491,6 +586,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = where2throw/where2throw.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COREML_CODEGEN_LANGUAGE = "Objective-C";
+				COREML_CODEGEN_SWIFT_GLOBAL_MODULE = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VZY6JC8VH5;
 				HEADER_SEARCH_PATHS = (
@@ -588,6 +687,91 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DoubleConversion\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Expo\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoAsset\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoBlur\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFont\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHaptics\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHead\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoKeepAwake\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoLinking\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoModulesCore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSplashScreen\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSymbols\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ExpoWebBrowser\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCTDeprecation\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCTTypeSafety\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNGestureHandler\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNReanimated\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNScreens\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-CoreModules\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-FabricComponents\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-FabricImage\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-ImageManager\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Mapbuffer\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTAnimation\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTAppDelegate\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTBlob\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTFabric\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTImage\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTLinking\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTNetwork\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTSettings\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTText\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTVibration\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RuntimeApple\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RuntimeCore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RuntimeHermes\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-debug\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-defaultsnativemodule\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-domnativemodule\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-featureflags\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-featureflagsnativemodule\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-hermes\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-idlecallbacksnativemodule\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jserrorhandler\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsi\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsiexecutor\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsinspector\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-logger\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-microtasksnativemodule\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-nativeconfig\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-perflogger\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-performancetimeline\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-rendererconsistency\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-rendererdebug\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-runtimescheduler\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-utils\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ReactCodegen\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SocketRocket\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/VisionCamera\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Yoga\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/fmt\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/glog\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-fast-tflite\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-safe-area-context\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-skia\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-webview\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-worklets-core\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/vision-camera-resize-plugin\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/react-native-skia\"",
+					"\"${TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}\"",
+					"/usr/lib/swift/**",
+					"$(SRCROOT)/../node_modules/react-native-vision-camera/ios/FrameProcessors",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -597,6 +781,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.gang-03.where2throw";
 				PRODUCT_NAME = where2throw;
+				SWIFT_INCLUDE_PATHS = "$(inherited) \"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants\" \"${PODS_CONFIGURATION_BUILD_DIR}/Expo\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoAsset\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoBlur\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFont\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHaptics\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHead\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoKeepAwake\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoLinking\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoModulesCore\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSplashScreen\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSymbols\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoWebBrowser\" \"${PODS_CONFIGURATION_BUILD_DIR}/VisionCamera\" $(SRCROOT)/../node_modules/react-native-vision-camera/ios/FrameProcessors/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "where2throw/where2throw-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -635,6 +820,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				COREML_CODEGEN_SWIFT_GLOBAL_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -698,6 +884,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				COREML_CODEGEN_SWIFT_GLOBAL_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

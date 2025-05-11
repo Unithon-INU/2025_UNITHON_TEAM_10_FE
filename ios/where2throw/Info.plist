@@ -22,11 +22,6 @@
     <string>1.0.0</string>
     <key>CFBundleSignature</key>
     <string>????</string>
-    <key>UIFileSharingEnabled</key>
-<true/>
-<key>LSSupportsOpeningDocumentsInPlace</key>
-<true/>
-
     <key>CFBundleURLTypes</key>
     <array>
       <dict>

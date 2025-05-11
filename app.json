@@ -9,8 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "assetBundlePatterns": [
-      "**/*", // 모든 asset 포함
-      "assets/models/*.onnx" // 명시적으로 모델 포함
+      "**/*",
+      "assets/models/*.onnx"
     ],
     "ios": {
       "supportsTablet": true,
@@ -18,7 +18,8 @@
         "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera.",
         "NSMicrophoneUsageDescription": "$(PRODUCT_NAME) needs access to your Microphone."
       },
-      "bundleIdentifier": "com.gang-03.where2throw"
+      "bundleIdentifier": "com.gang-03.where2throw",
+      "appleTeamId": "JFM39N7Z6U"
     },
     "android": {
       "adaptiveIcon": {
@@ -62,6 +63,13 @@
           "android": {
             "minSdkVersion": 26
           }
+        }
+      ],
+      [
+        "react-native-fast-tflite",
+        {
+          "enableCoreMLDelegate": true,
+          "enableAndroidGpuLibraries": true
         }
       ]
     ],
