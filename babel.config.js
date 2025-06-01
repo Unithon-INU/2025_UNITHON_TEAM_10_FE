@@ -1,8 +1,18 @@
-module.exports = {
-  presets: ['babel-preset-expo'],
+module.exports = function(api) {
+    api.cache(true);
 
-  plugins: [
-    ['react-native-worklets-core/plugin'],
-    ['react-native-reanimated/plugin'], // ← 꼭 있어야 함
-  ],
-}
+    return {
+        presets: [["babel-preset-expo", {
+            jsxImportSource: "nativewind"
+        }], "nativewind/babel"],
+
+        plugins: [["module-resolver", {
+            root: ["./"],
+
+            alias: {
+                "@": "./",
+                "tailwind.config": "./tailwind.config.js"
+            }
+        }]]
+    };
+};

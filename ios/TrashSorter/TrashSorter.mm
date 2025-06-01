@@ -45,7 +45,6 @@
     if (padY) *padY = pY;
 
 
-    OSType sourcePixelFormat = CVPixelBufferGetPixelFormatType(sourceBuffer);
     
     CIImage *ciImage = [CIImage imageWithCVPixelBuffer:sourceBuffer];
     // Resize
