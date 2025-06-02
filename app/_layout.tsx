@@ -4,6 +4,7 @@ import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import "../global.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -11,11 +12,7 @@ export default function RootLayout() {
     NanumSquareNeoBold: require("/assets/fonts/NanumSquareNeo-Bd.ttf"),
     NanumSquareNeoExtraBold: require("/assets/fonts/NanumSquareNeo-Eb.ttf"),
   });
-  useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded, error]);
+
 
   if (!loaded && !error) {
     return null;
@@ -26,11 +23,18 @@ export default function RootLayout() {
       router.replace(message as any);
     });
   });
+
+  const queryClient = new QueryClient();
   return (
     <GluestackUIProvider>
-      <Stack>
-        <Stack.Screen name="index" options={{headerShown: false}}></Stack.Screen>
-      </Stack>
+      <QueryClientProvider client={queryClient}>
+        <Stack>
+          <Stack.Screen
+            name="index"
+            options={{ headerShown: false }}
+          ></Stack.Screen>
+        </Stack>
+      </QueryClientProvider>
     </GluestackUIProvider>
   );
 }

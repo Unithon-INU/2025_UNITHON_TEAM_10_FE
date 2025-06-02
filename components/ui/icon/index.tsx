@@ -6,6 +6,7 @@ import { tva } from '@gluestack-ui/nativewind-utils/tva';
 import { cssInterop } from 'nativewind';
 import { VariantProps } from '@gluestack-ui/nativewind-utils';
 import { PrimitiveIcon, IPrimitiveIcon, Svg } from '@gluestack-ui/icon';
+import { Image } from '../image';
 
 export const UIIcon = createIcon({
   Root: PrimitiveIcon,
@@ -1583,3 +1584,23 @@ const UnlockIcon = createIcon({
 
 UnlockIcon.displayName = 'UnlockIcon';
 export { UnlockIcon };
+
+
+const ImageIcon = ({
+  image,
+  size = "md",
+}: {
+  image: any;
+  size?: "sm" | "md" | "lg";
+}) => {
+  const sizeNumber = size == "sm" ? 4 : size == "md" ? 8 : 12;
+  return (
+    <Image
+      source={image}
+      className={`w-${sizeNumber} h-${sizeNumber}`}
+      alt="ImageIcon"
+    />
+  );
+};
+
+export {ImageIcon};

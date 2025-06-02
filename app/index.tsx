@@ -1,10 +1,6 @@
 import {
-  ColorValue,
-  ImageSourcePropType,
   SafeAreaView,
   ScrollView,
-  Text as TextView,
-  View,
 } from "react-native";
 import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
@@ -13,83 +9,19 @@ import { Divider } from "@/components/ui/divider";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import { SearchIcon } from "@/components/ui/icon";
+import { ImageIcon, SearchIcon } from "@/components/ui/icon";
 import { Image } from "@/components/ui/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Card } from "@/components/ui/card";
+import { Card, ImageCard } from "@/components/ui/card";
 import { ImageBackground } from "@/components/ui/image-background";
-const Meter = ({
-  children,
-  unit,
-  desc,
-}: React.PropsWithChildren<{ unit: string; desc?: string }>) => {
-  return (
-    <VStack>
-      <HStack className="flex-row justify-center">
-        <Text className="text-highlight-md">{children} </Text>
-        <Text>{unit}</Text>
-      </HStack>
-      {desc && <Text>{desc}</Text>}
-    </VStack>
-  );
-};
+import {useQuery} from '@tanstack/react-query';
+import DashboardApi from "@/api/dashboard";
+import { SplashScreen } from "expo-router";
+import { Meter } from "@/components/ui/meter";
 
-const CardWithImageBackground = ({
-  title,
-  backgroundImage,
-  overlayOpacity = 0.5, // 기본 투명도 0.5 (50%)
-  textColor,
-  children, // 자식 컴포넌트를 받을 수 있도록 추가
-  onClick,
-}: React.PropsWithChildren<{
-  title: string;
-  backgroundImage: ImageSourcePropType | undefined;
-  overlayOpacity: number;
-  textColor?: ColorValue;
-  onClick?: () => void;
-}>) => {
-  return (
-    <Box className="rounded-xl overflow-hidden" onTouchEnd={onClick}>
-      <ImageBackground
-        source={backgroundImage}
-        resizeMode="cover"
-        className="flex-1 justify-start h-52"
-      >
-        {/* 반투명 오버레이 */}
-        <Box
-          className="absolute top-0 left-0 right-0 bottom-0 bg-gray-800"
-          style={{ opacity: overlayOpacity }}
-        />
 
-        {/* 컨텐츠 (제목 및 자식 컴포넌트) */}
-        <VStack className="p-6 gap-2 z-1">
-          <Text className="font-nanum-square-extra-bold text-title">
-            {title}
-          </Text>
-          {children}
-        </VStack>
-      </ImageBackground>
-    </Box>
-  );
-};
 
-const ImageIcon = ({
-  image,
-  size = "md",
-}: {
-  image: any;
-  size?: "sm" | "md" | "lg";
-}) => {
-  const sizeNumber = size == "sm" ? 4 : size == "md" ? 8 : 12;
-  return (
-    <Image
-      source={image}
-      className={`w-${sizeNumber} h-${sizeNumber}`}
-      alt="ImageIcon"
-    />
-  );
-};
 
 export default function Index() {
   const phrases = [
@@ -100,29 +32,25 @@ export default function Index() {
     "칫솔은 일반 쓰레기인가요?",
   ];
   const placeHolder = phrases[Math.floor(Math.random() * phrases.length)];
-  const achievements = [
-    {
-      unit: "점",
-      value: 340,
-    },
-    {
-      unit: "kg",
-      value: 2.3,
-      label: "이산화탄소",
-    },
-    {
-      unit: "km",
-      value: 3,
-      label: "자동차",
-    },
-  ];
-  const recycleStats = new Array(4).fill({ value: 24 });
-  const banners = [
-    {
-      title: "쓰레기 버리고\n포인트 얻기",
-      backgroundImage: require("../assets/images/bg.png"),
-    },
-  ];
+  const myRecords = useQuery({
+    queryKey: ['myRecords'],
+    queryFn: async () => await DashboardApi.fetchMyRecords()
+  });
+  const banners = useQuery({
+    queryKey: ['banners'],
+    queryFn: async () => await DashboardApi.fetchBanners()
+  });
+
+  const achievements = myRecords.data?.stat!
+  const recycleStats = myRecords.data?.recycleCounts!
+
+    useEffect(() => {
+      if (!myRecords.isLoading) {
+        SplashScreen.hideAsync();
+      }
+    }, [myRecords.isLoading]);
+
+  if (myRecords.isLoading) return <Box></Box>
 
   return (
     <SafeAreaView className="bg-white h-full ">
@@ -162,7 +90,7 @@ export default function Index() {
                     image={require("/assets/images/pet.png")}
                     size="md"
                   />
-                  <Text className="text-highlight-md">{stat.value}</Text>
+                  <Text className="text-highlight-md">{stat.count}</Text>
                   {idx < recycleStats.length - 1 && (
                    <Divider
                       orientation="vertical"
@@ -182,15 +110,15 @@ export default function Index() {
               />
             </Input>
           </HStack>
-          {banners.map((banner) => (
-            <CardWithImageBackground
+          {banners.data?.map((banner) => (
+            <ImageCard
               title={banner.title}
               backgroundImage={banner.backgroundImage}
               overlayOpacity={0}
               onClick={() => {
                 alert("banner");
               }}
-            ></CardWithImageBackground>
+            />
           ))}
         </VStack>
       </ScrollView>
