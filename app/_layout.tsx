@@ -7,7 +7,9 @@ import "../global.css";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    NanumSquareNeo: require("/assets/fonts/NanumSquareNeo-Variable.ttf"),
+    NanumSquareNeo: require("/assets/fonts/NanumSquareNeo-Rg.ttf"),
+    NanumSquareNeoBold: require("/assets/fonts/NanumSquareNeo-Bd.ttf"),
+    NanumSquareNeoExtraBold: require("/assets/fonts/NanumSquareNeo-Eb.ttf"),
   });
   useEffect(() => {
     if (loaded || error) {

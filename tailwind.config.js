@@ -13,19 +13,34 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          0: 'rgb(var(--color-primary-0)/<alpha-value>)',
-          50: 'rgb(var(--color-primary-50)/<alpha-value>)',
-          100: 'rgb(var(--color-primary-100)/<alpha-value>)',
-          200: 'rgb(var(--color-primary-200)/<alpha-value>)',
-          300: 'rgb(var(--color-primary-300)/<alpha-value>)',
-          400: 'rgb(var(--color-primary-400)/<alpha-value>)',
-          500: 'rgb(var(--color-primary-500)/<alpha-value>)',
-          600: 'rgb(var(--color-primary-600)/<alpha-value>)',
-          700: 'rgb(var(--color-primary-700)/<alpha-value>)',
-          800: 'rgb(var(--color-primary-800)/<alpha-value>)',
-          900: 'rgb(var(--color-primary-900)/<alpha-value>)',
-          950: 'rgb(var(--color-primary-950)/<alpha-value>)',
+        icon: "#6d6d6d",
+         primary: {
+          // Base color: #5EDAA3 (RGB: 94, 218, 163)
+          50: '#ECFBF5',   // Very lightest shade, almost white
+          100: '#D7F8EC',
+          200: '#B0F2D6',
+          300: '#89EBCD',
+          400: '#62E4BB',
+          500: '#5EDAA3',   // Base color: #5EDAA3
+          600: '#4CAE82',
+          700: '#3D8C69',
+          800: '#306F54',
+          900: '#255540',
+          950: '#152C1F',    // Darkest shade
+        },
+        error: {
+          // Base color: #FD8888 (RGB: 253, 136, 136)
+          50: '#FFF2F2',
+          100: '#FFE9E9',
+          200: '#FFD7D7',
+          300: '#FFBEBE',
+          400: '#FF9E9E',
+          500: '#FD8888',   // Base color: #FD8888
+          600: '#EC6A6A',
+          700: '#DA4F4F',
+          800: '#C23E3E',
+          900: '#A53434',
+          950: '#641B1B',
         },
         secondary: {
           0: 'rgb(var(--color-secondary-0)/<alpha-value>)',
@@ -53,20 +68,6 @@ module.exports = {
           800: 'rgb(var(--color-tertiary-800)/<alpha-value>)',
           900: 'rgb(var(--color-tertiary-900)/<alpha-value>)',
           950: 'rgb(var(--color-tertiary-950)/<alpha-value>)',
-        },
-        error: {
-          0: 'rgb(var(--color-error-0)/<alpha-value>)',
-          50: 'rgb(var(--color-error-50)/<alpha-value>)',
-          100: 'rgb(var(--color-error-100)/<alpha-value>)',
-          200: 'rgb(var(--color-error-200)/<alpha-value>)',
-          300: 'rgb(var(--color-error-300)/<alpha-value>)',
-          400: 'rgb(var(--color-error-400)/<alpha-value>)',
-          500: 'rgb(var(--color-error-500)/<alpha-value>)',
-          600: 'rgb(var(--color-error-600)/<alpha-value>)',
-          700: 'rgb(var(--color-error-700)/<alpha-value>)',
-          800: 'rgb(var(--color-error-800)/<alpha-value>)',
-          900: 'rgb(var(--color-error-900)/<alpha-value>)',
-          950: 'rgb(var(--color-error-950)/<alpha-value>)',
         },
         success: {
           0: 'rgb(var(--color-success-0)/<alpha-value>)',
@@ -125,7 +126,7 @@ module.exports = {
           950: 'rgb(var(--color-typography-950)/<alpha-value>)',
           white: '#FFFFFF',
           gray: '#D4D4D4',
-          black: '#181718',
+          black: '#151515',
         },
         outline: {
           0: 'rgb(var(--color-outline-0)/<alpha-value>)',
@@ -142,18 +143,7 @@ module.exports = {
           950: 'rgb(var(--color-outline-950)/<alpha-value>)',
         },
         background: {
-          0: 'rgb(var(--color-background-0)/<alpha-value>)',
-          50: 'rgb(var(--color-background-50)/<alpha-value>)',
-          100: 'rgb(var(--color-background-100)/<alpha-value>)',
-          200: 'rgb(var(--color-background-200)/<alpha-value>)',
-          300: 'rgb(var(--color-background-300)/<alpha-value>)',
-          400: 'rgb(var(--color-background-400)/<alpha-value>)',
-          500: 'rgb(var(--color-background-500)/<alpha-value>)',
-          600: 'rgb(var(--color-background-600)/<alpha-value>)',
-          700: 'rgb(var(--color-background-700)/<alpha-value>)',
-          800: 'rgb(var(--color-background-800)/<alpha-value>)',
-          900: 'rgb(var(--color-background-900)/<alpha-value>)',
-          950: 'rgb(var(--color-background-950)/<alpha-value>)',
+          '500': "#F9F9F9",
           error: 'rgb(var(--color-background-error)/<alpha-value>)',
           warning: 'rgb(var(--color-background-warning)/<alpha-value>)',
           muted: 'rgb(var(--color-background-muted)/<alpha-value>)',
@@ -167,6 +157,7 @@ module.exports = {
           info: 'rgb(var(--color-indicator-info)/<alpha-value>)',
           error: 'rgb(var(--color-indicator-error)/<alpha-value>)',
         },
+        placeholder: '#C1C1C1'
       },
       fontFamily: {
         heading: undefined,
@@ -174,6 +165,8 @@ module.exports = {
         mono: undefined,
         roboto: ['Roboto', 'sans-serif'],
         'nanum-square': ['NanumSquareNeo', 'sans-serif'], // Example: using Poppins font
+        'nanum-square-bold': ['NanumSquareNeoBold', 'sans-serif'], // Example: using Poppins font
+        'nanum-square-extra-bold': ['NanumSquareNeoExtraBold', 'sans-serif'], // Example: using Poppins font
       },
       fontSize: {
         'title': ['24px', { lineHeight: '24px' }], // 제목 (Title)
@@ -200,6 +193,7 @@ module.exports = {
         'soft-2': '0px 0px 20px rgba(38, 38, 38, 0.2)',
         'soft-3': '0px 0px 30px rgba(38, 38, 38, 0.1)',
         'soft-4': '0px 0px 40px rgba(38, 38, 38, 0.1)',
+        'drop': '0 2px 15px rgba(0, 0, 0, 0.1)', // x, y, blur, color
       },
     },
   },
