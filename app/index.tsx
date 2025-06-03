@@ -1,6 +1,10 @@
 import {
+  FlatList,
   SafeAreaView,
   ScrollView,
+  TextInput,
+  TextInputProps,
+  TouchableHighlight,
 } from "react-native";
 import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
@@ -8,19 +12,17 @@ import Svg, { Path } from "react-native-svg";
 import { Divider } from "@/components/ui/divider";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
-import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import { ImageIcon, SearchIcon } from "@/components/ui/icon";
-import { Image } from "@/components/ui/image";
-import React, { useEffect } from "react";
+import { Input, InputField } from "@/components/ui/input";
+import { ImageIcon } from "@/components/ui/icon";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Card, ImageCard } from "@/components/ui/card";
-import { ImageBackground } from "@/components/ui/image-background";
-import {useQuery} from '@tanstack/react-query';
+import { ImageCard } from "@/components/ui/card";
+import { useQuery } from "@tanstack/react-query";
 import DashboardApi from "@/api/dashboard";
 import { SplashScreen } from "expo-router";
 import { Meter } from "@/components/ui/meter";
-
-
+import WasteApi from "@/api/waste";
+import useDebounce from "@/lib/useDebounce";
 
 
 export default function Index() {
@@ -31,26 +33,51 @@ export default function Index() {
     "컵라면 용기는 어떻게 버릴까요?",
     "칫솔은 일반 쓰레기인가요?",
   ];
-  const placeHolder = phrases[Math.floor(Math.random() * phrases.length)];
+  const placeHolder = useMemo(
+    () => phrases[Math.floor(Math.random() * phrases.length)],
+    []
+  );
+
+  const [searchInput, setSearchInput] = useState("");
+  const [searchBoxSize, setSearchBoxSize] = useState<{
+    width?: number;
+    height?: number;
+  }>({});
+  const [query, setQuery] = useState("");
+  const debounceQuery = useDebounce((query) => setQuery(query), 1000);
+
+  useEffect(() => {
+    debounceQuery(searchInput);
+  }, [searchInput]);
+
+
+  const [searchBoxFocused, setSearchBoxFocused] = useState(false);
+
   const myRecords = useQuery({
-    queryKey: ['myRecords'],
-    queryFn: async () => await DashboardApi.fetchMyRecords()
+    queryKey: ["myRecords"],
+    queryFn: async () => await DashboardApi.fetchMyRecords(),
   });
   const banners = useQuery({
-    queryKey: ['banners'],
-    queryFn: async () => await DashboardApi.fetchBanners()
+    queryKey: ["banners"],
+    queryFn: async () => await DashboardApi.fetchBanners(),
   });
 
-  const achievements = myRecords.data?.stat!
-  const recycleStats = myRecords.data?.recycleCounts!
+  const searchResults = useQuery({
+    queryKey: ["search", query],
+    queryFn: async ({ queryKey: [_, query] }) =>
+      WasteApi.searchWasteByName(query),
+  });
 
-    useEffect(() => {
-      if (!myRecords.isLoading) {
-        SplashScreen.hideAsync();
-      }
-    }, [myRecords.isLoading]);
+  const achievements = myRecords.data?.stat!;
+  const recycleStats = myRecords.data?.recycleCounts!;
 
-  if (myRecords.isLoading) return <Box></Box>
+  useEffect(() => {
+    if (!myRecords.isLoading) {
+      SplashScreen.hideAsync();
+    }
+  }, [myRecords.isLoading]);
+
+  if (myRecords.isLoading) return <Box></Box>;
 
   return (
     <SafeAreaView className="bg-white h-full ">
@@ -71,11 +98,12 @@ export default function Index() {
             <HStack className="gap-5 justify-center items-center">
               {achievements.map((achieve, i) => (
                 <>
-                  <Meter unit={achieve.unit} desc={achieve.label}>
+                  <Meter key={i} unit={achieve.unit} desc={achieve.label}>
                     {achieve.value}
                   </Meter>
                   {i < achievements.length - 1 && (
                     <Divider
+                      key={`div_${i}`}
                       orientation="vertical"
                       className="bg-placeholder w-[0.5px]"
                     />
@@ -84,15 +112,17 @@ export default function Index() {
               ))}
             </HStack>
             <HStack className="bg-background-500 items-center justify-center gap-4 py-4 rounded-xl ">
-              {recycleStats.map((stat, idx) => (
+              {recycleStats.map((stat, i) => (
                 <>
                   <ImageIcon
+                    key={i}
                     image={require("/assets/images/pet.png")}
                     size="md"
                   />
                   <Text className="text-highlight-md">{stat.count}</Text>
-                  {idx < recycleStats.length - 1 && (
-                   <Divider
+                  {i < recycleStats.length - 1 && (
+                    <Divider
+                      key={`div_${i}`}
                       orientation="vertical"
                       className="bg-placeholder w-[0.5px]"
                     />
@@ -101,17 +131,61 @@ export default function Index() {
               ))}
             </HStack>
           </VStack>
-          <HStack className="items-center px-[20%] py-4 bg-background-500 rounded-xl">
-            <MaterialIcons name="search" size={32} color="#6d6d6d" />
-            <Input className="flex-1 border-0 text-center drop-shadow-xl">
-              <InputField
-                placeholder={placeHolder}
-                className="font-nanum-square"
-              />
-            </Input>
-          </HStack>
+          <VStack>
+            <HStack className="justify-center  py-4 bg-background-500 rounded-t-xl">
+              <MaterialIcons name="search" size={32} color="#6d6d6d" />
+              <Input
+                className="border-0 text-center drop-shadow-xl max-w-[80%]"
+                style={{ width: (searchBoxSize?.width ?? 0) + 20 }}
+              >
+                <InputField
+                  onPress={() => setSearchBoxFocused(true)}
+                  onFocus={() => setSearchBoxFocused(true)}
+                  placeholder={placeHolder}
+                  className="font-nanum-square"
+                  onChangeText={(text) => setSearchInput(text)}
+                  value={searchInput}
+                />
+              </Input>
+              <Text
+                onLayout={({ nativeEvent: { layout } }) => {
+                  setSearchBoxSize(layout);
+                }}
+                className="absolute opacity-0"
+              >
+                {searchInput.length > 0 ? searchInput : placeHolder}
+              </Text>
+            </HStack>
+            <Box className="relative">
+              {searchBoxFocused && (
+                <ScrollView className="absolute top-0 w-full  bg-[#f1f1f1] rounded-b-xl z-10 h-48 shadow-drop">
+                  {searchResults.data?.map((candidate) => (
+                    <>
+                      <TouchableHighlight
+                        activeOpacity={0.6}
+                        underlayColor="#dddddd"
+                        onPress={() => {
+                          setSearchBoxFocused(false);
+                          setSearchInput(candidate);
+                        }}
+                        className="items-center py-4 "
+                      >
+                        <Text>{candidate}</Text>
+                      </TouchableHighlight>
+                      <Divider
+                        orientation="horizontal"
+                        className="bg-placeholder h-[0.5px]"
+                      />
+                    </>
+                  ))}
+                </ScrollView>
+              )}
+            </Box>
+          </VStack>
+
           {banners.data?.map((banner) => (
             <ImageCard
+              key={banner.title}
               title={banner.title}
               backgroundImage={banner.backgroundImage}
               overlayOpacity={0}
