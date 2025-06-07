@@ -33,6 +33,14 @@ export default function RootLayout() {
             name="index"
             options={{ headerShown: false }}
           ></Stack.Screen>
+          <Stack.Screen
+            name="main"
+            options={{ headerShown: false }}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="login"
+            options={{ headerShown: false }}
+          ></Stack.Screen>
         </Stack>
       </QueryClientProvider>
     </GluestackUIProvider>
