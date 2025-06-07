@@ -13,7 +13,7 @@ import {
 } from "react-native-vision-camera";
 
 import { useRunOnJS } from "react-native-worklets-core";
-import useAppState from "./hooks/useAppState";
+import useAppState from "../../hooks/useAppState";
 
 import {
   Canvas,
@@ -21,9 +21,7 @@ import {
   Text as SkiaText,
   useFont,
 } from "@shopify/react-native-skia";
-import { cocoClasses } from "./coco_classes";
-
-
+import { cocoClasses } from "../../coco_classes";
 
 const plugin = VisionCameraProxy.initFrameProcessorPlugin("detect", {});
 type DetectionResult = {
@@ -79,7 +77,10 @@ export default function Scan() {
     setDevices(devices);
   }, [appState]);
 
-  const font = useFont(require("../assets/fonts/SpaceMono-Regular.ttf"), 32);
+  const font = useFont(
+    require("../../../assets/fonts/SpaceMono-Regular.ttf"),
+    32
+  );
 
   if (!hasPermission) {
     requestPermission();
@@ -90,7 +91,7 @@ export default function Scan() {
       </View>
     );
   }
-  if (device == null || appState !== 'active')
+  if (device == null || appState !== "active")
     return (
       <View>
         <Text>No Camera</Text>
@@ -131,7 +132,7 @@ export default function Scan() {
       >
         {detections?.detections?.map(({ box, classId: className }, idx) => {
           const [y, width, height] =
-          // Todo: 플랫폼별 리사이징 로직이 상이해 박스 복원 로직도 상이함.
+            // Todo: 플랫폼별 리사이징 로직이 상이해 박스 복원 로직도 상이함.
             Platform.OS == "android"
               ? [box.y + 160, box.width * 0.8, box.height * 0.8]
               : [box.y, box.width, box.height];
