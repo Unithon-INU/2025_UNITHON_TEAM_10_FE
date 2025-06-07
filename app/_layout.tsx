@@ -1,11 +1,16 @@
 import { router, SplashScreen, Stack, Tabs } from "expo-router";
 import { Alert, Appearance, DevSettings } from "react-native";
 import { useFonts } from "expo-font";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import "../global.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 import { BottomTabBar, BottomTabView } from "@react-navigation/bottom-tabs";
+import AuthApi from "@/api/auth";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -13,8 +18,20 @@ export default function RootLayout() {
     NanumSquareNeoBold: require("/assets/fonts/NanumSquareNeo-Bd.ttf"),
     NanumSquareNeoExtraBold: require("/assets/fonts/NanumSquareNeo-Eb.ttf"),
   });
+  const [loginCheck, setLoginCheck] = useState<boolean>();
 
-  if (!loaded && !error) {
+  useEffect(() => {
+    if (loaded)
+      AuthApi.checkLogin().then((res) => {
+        SplashScreen.hide();
+        setLoginCheck(res);
+        if (res) router.replace("/(tabs)");
+        else router.replace("/(auth)/login");
+      });
+  }, [loaded]);
+
+  // loginCheck 로딩중일 때 포함
+  if (!loaded && !error && loginCheck === undefined) {
     return null;
   }
 
@@ -38,8 +55,16 @@ export default function RootLayout() {
             options={{ headerShown: false }}
           ></Stack.Screen>
           <Stack.Screen
-            name="login"
+            name="(auth)/login"
             options={{ headerShown: false }}
+          ></Stack.Screen>
+
+          <Stack.Screen
+            name="scan"
+            options={{
+              headerTitle: "물체 스캔",
+              headerBackButtonDisplayMode: "minimal",
+            }}
           ></Stack.Screen>
         </Stack>
       </QueryClientProvider>

@@ -24,7 +24,7 @@ const TabBarButton = ({
     style={[styles.tabButton]}
   >
     <View style={[styles.iconContainer]}>
-      <FontAwesome name={iconName} size={28} color={props.accessibilityState?.selected ? 'blue' : 'black'} />
+      <FontAwesome name={iconName} size={28} color={props.accessibilityState?.selected ? '#5EDAA3' : 'black'} />
     </View>
   </TouchableOpacity>
 );
@@ -32,7 +32,6 @@ const TabBarButton = ({
 export default function TabLayout() {
   return (
     <Tabs
-      // tabBar={(props) => <CustomTabBar {...props} />} // ⭐️ 여기에서 커스텀 탭바 컴포넌트 사용
       screenOptions={{
         headerShown: false, // 모든 탭의 기본 헤더 숨김
         tabBarStyle: {
