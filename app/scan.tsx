@@ -13,7 +13,7 @@ import {
 } from "react-native-vision-camera";
 
 import { useRunOnJS } from "react-native-worklets-core";
-import useAppState from "../../hooks/useAppState";
+import useAppState from "./hooks/useAppState";
 
 import {
   Canvas,
@@ -21,7 +21,7 @@ import {
   Text as SkiaText,
   useFont,
 } from "@shopify/react-native-skia";
-import { cocoClasses } from "../../coco_classes";
+import { cocoClasses } from "../lib/coco_classes";
 
 const plugin = VisionCameraProxy.initFrameProcessorPlugin("detect", {});
 type DetectionResult = {
@@ -78,7 +78,7 @@ export default function Scan() {
   }, [appState]);
 
   const font = useFont(
-    require("../../../assets/fonts/SpaceMono-Regular.ttf"),
+    require("../assets/fonts/SpaceMono-Regular.ttf"),
     32
   );
 

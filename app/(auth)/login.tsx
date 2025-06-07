@@ -16,7 +16,7 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
 
    const handleLogin = () => {
-    router.navigate("main");
+    router.navigate("/(tabs)");
   };
 
   return (
