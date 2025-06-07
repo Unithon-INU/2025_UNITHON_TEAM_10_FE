@@ -10,122 +10,90 @@ import {
 } from "react-native";
 import { useNavigation, useSegments } from "expo-router";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
-import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import type { BottomTabBarButtonProps, BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-// CustomTabBar 컴포넌트
-function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
-  return (
-    <SafeAreaView style={styles.tabBarContainer}>
-      <View style={styles.tabBar}>
-        {state.routes.map((route, index) => {
-          const { options } = descriptors[route.key];
-          const isFocused = state.index === index;
-
-          // 아이콘 이름 매핑
-          const iconName: keyof typeof FontAwesome.glyphMap =
-            (
-              {
-                index: "home",
-                settings: "cog",
-                scanPlaceholder: "camera", // 스캔 아이콘 (확대경/스캔 모양으로 변경)
-                location: "map-marker",
-                profile: "user",
-              } as Record<string, keyof typeof FontAwesome.glyphMap>
-            )[route.name] || "question-circle";
-
-          const onPress = () => {
-            if (isScanTab) router.push("/scan");
-            else {
-              const event = navigation.emit({
-                type: "tabPress",
-                target: route.key,
-                canPreventDefault: true,
-              });
-
-              if (!isFocused && !event.defaultPrevented) {
-                navigation.navigate(route.name);
-              }
-            }
-          };
-
-          const onLongPress = () => {
-            navigation.emit({
-              type: "tabLongPress",
-              target: route.key,
-            });
-          };
-
-          const isScanTab = route.name === "scanPlaceholder"; // 스캔 탭인지 확인
-
-          return (
-            <TouchableOpacity
-              key={route.key}
-              accessibilityRole="button"
-              accessibilityState={isFocused ? { selected: true } : {}}
-              accessibilityLabel={options.tabBarAccessibilityLabel}
-              testID={options.tabBarButtonTestID}
-              onPress={onPress}
-              onLongPress={onLongPress}
-              style={[
-                styles.tabButton,
-              ]}
-            >
-              <View
-                style={[
-                  styles.iconContainer,
-                  isScanTab && styles.scanIconContainer, // 스캔 탭 아이콘 컨테이너 스타일
-                ]}
-              >
-                <FontAwesome
-                  name={iconName}
-                  size={isScanTab ? 30 : 40} // 스캔 아이콘 크기 조절
-                  color={isScanTab ? "#fff" : isFocused ? "#007AFF" : "#222"} // 스캔 아이콘 색상 조절
-                />
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-    </SafeAreaView>
-  );
-}
+const TabBarButton = ({
+  iconName,
+  ...props
+}: Omit<{
+  iconName: keyof typeof FontAwesome.glyphMap;
+} & BottomTabBarButtonProps, 'children'>) => (
+  <TouchableOpacity
+    onPress={props.onPress}
+    style={[styles.tabButton]}
+  >
+    <View style={[styles.iconContainer]}>
+      <FontAwesome name={iconName} size={28} color={props.accessibilityState?.selected ? 'blue' : 'black'} />
+    </View>
+  </TouchableOpacity>
+);
 
 export default function TabLayout() {
   return (
     <Tabs
-      tabBar={(props) => <CustomTabBar {...props} />} // ⭐️ 여기에서 커스텀 탭바 컴포넌트 사용
+      // tabBar={(props) => <CustomTabBar {...props} />} // ⭐️ 여기에서 커스텀 탭바 컴포넌트 사용
       screenOptions={{
         headerShown: false, // 모든 탭의 기본 헤더 숨김
+        tabBarStyle: {
+          height: 100,
+        },
       }}
     >
-      <Stack></Stack>
       <Tabs.Screen
-        name="index" // app/(tabs)/index.tsx
+        name={"index"}
         options={{
-          title: "홈",
+          tabBarButton: (props) => (
+            <TabBarButton {...props} iconName={"home"} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="settings" // app/(tabs)/settings.tsx
+        name={"board"}
         options={{
-          title: "설정",
+          tabBarButton: (props) => (
+            <TabBarButton {...props} iconName={"clipboard"} />
+          ),
         }}
-      />
-      <Tabs.Screen
-        name="scanPlaceholder" // 임의의 이름
       />
 
       <Tabs.Screen
-        name="location" // app/(tabs)/location.tsx
+        name="scanPlaceholder" // 임의의 이름
         options={{
-          title: "위치",
+          tabBarButton: () => (
+            <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel="scan"
+              onPress={() => router.push("/scan")}
+              style={[styles.tabButton]}
+            >
+              <View
+                style={[
+                  styles.iconContainer,
+                  styles.scanIconContainer, // 스캔 탭 아이콘 컨테이너 스타일
+                ]}
+              >
+                <FontAwesome
+                  name="camera"
+                  size={28} // 스캔 아이콘 크기 조절
+                  color="#fff" // 스캔 아이콘 색상 조절
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="map" // app/(tabs)/location.tsx
+        options={{
+          tabBarButton: (props) => <TabBarButton {...props} iconName={"map-marker"} />,
         }}
       />
       <Tabs.Screen
-        name="profile" // app/(tabs)/profile.tsx
+        name="my" // app/(tabs)/profile.tsx
         options={{
-          title: "프로필",
+          tabBarButton: (props) => <TabBarButton {...props} iconName={"user"} />,
         }}
       />
     </Tabs>
@@ -158,8 +126,8 @@ const styles = StyleSheet.create({
   scanIconContainer: {
     backgroundColor: "#000", // 파란색 배경
     borderRadius: 30, // 원형으로 만듦 (크기의 절반)
-    width: 60, // 원형 크기
-    height: 60, // 원형 크기
+    width: 50, // 원형 크기
+    height: 50, // 원형 크기
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#000", // 그림자 효과
