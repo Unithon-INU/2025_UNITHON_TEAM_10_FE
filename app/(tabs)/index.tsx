@@ -2,6 +2,7 @@ import {
   FlatList,
   SafeAreaView,
   ScrollView,
+  StatusBar,
   TextInput,
   TextInputProps,
   TouchableHighlight,
@@ -23,7 +24,7 @@ import { SplashScreen } from "expo-router";
 import { Meter } from "@/components/ui/meter";
 import WasteApi from "@/api/waste";
 import useDebounce from "@/lib/useDebounce";
-
+import FocusAwareStatusBar from "@/components/ui/focus-aware-status-bar";
 
 export default function Main() {
   const phrases = [
@@ -49,7 +50,6 @@ export default function Main() {
   useEffect(() => {
     debounceQuery(searchInput);
   }, [searchInput]);
-
 
   const [searchBoxFocused, setSearchBoxFocused] = useState(false);
 
@@ -82,6 +82,11 @@ export default function Main() {
   return (
     <SafeAreaView className="bg-white h-full ">
       <ScrollView>
+        <FocusAwareStatusBar
+          animated={true}
+          backgroundColor={"white"}
+          barStyle={"dark-content"}
+        />
         <VStack className="px-6 gap-5">
           <VStack className="gap-10">
             <Text className="text-title">

@@ -171,7 +171,7 @@ module.exports = {
       fontSize: {
         'title': ['24px', { lineHeight: '24px' }], // 제목 (Title)
         'highlight-lg': ['32px', { lineHeight: '32px' }], // 수치 강조 (Large numerical emphasis)
-        'body': ['16px', { lineHeight: '16px' }], // 본문,입력 (Body, input)
+        'body': ['16px', { lineHeight: '20px' }], // 본문,입력 (Body, input)
         'banner': ['24px', { lineHeight: '24px' }], // 배너 (Banner) - same size as title but might have different weight
         'description': ['12px', { lineHeight: '12px' }], // 설명 (Description)
         'highlight-md': ['20px', { lineHeight: '20px' }], // 수치 강조 (Medium numerical emphasis)

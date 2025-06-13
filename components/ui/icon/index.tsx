@@ -1531,6 +1531,34 @@ const ThreeDotsIcon = createIcon({
 ThreeDotsIcon.displayName = 'ThreeDotsIcon';
 export { ThreeDotsIcon };
 
+
+const VerticalThreeDotsIcon = createIcon({
+  Root: Svg,
+  viewBox: '0 0 24 24',
+  path: (
+    <>
+      {/* 상단 점 (중심: 12, 5) */}
+      <Path
+        d="M12 6C12.5523 6 13 5.5523 13 5C13 4.4477 12.5523 4 12 4C11.4477 4 11 4.4477 11 5C11 5.5523 11.4477 6 12 6Z"
+        fill="currentColor"
+      />
+      {/* 중간 점 (중심: 12, 12) */}
+      <Path
+        d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z"
+        fill="currentColor"
+      />
+      {/* 하단 점 (중심: 12, 19) */}
+      <Path
+        d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z"
+        fill="currentColor"
+      />
+    </>
+  ),
+});
+
+VerticalThreeDotsIcon.displayName = 'VerticalThreeDotsIcon';
+export { VerticalThreeDotsIcon };
+
 const TrashIcon = createIcon({
   Root: Svg,
   viewBox: '0 0 24 24',

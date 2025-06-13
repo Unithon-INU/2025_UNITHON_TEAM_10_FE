@@ -58,6 +58,10 @@ export default function RootLayout() {
             name="(auth)/login"
             options={{ headerShown: false }}
           ></Stack.Screen>
+          <Stack.Screen
+            name="article/[id]"
+            options={{ title: '게시글', headerBackButtonDisplayMode: "minimal" }}
+          ></Stack.Screen>
 
           <Stack.Screen
             name="scan"
