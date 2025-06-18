@@ -1,4 +1,4 @@
-package com.gang_03.where2throw
+package com.where2throw.where2throwapp
 
 import android.app.Application
 import android.content.res.Configuration
@@ -15,7 +15,7 @@ import com.facebook.soloader.SoLoader
 
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
-import com.gang_03.where2throw.yolov11processor.YoloV11ProcessorPluginPackage
+import com.where2throw.where2throwapp.yolov11processor.YoloV11ProcessorPluginPackage
 
 
 class MainApplication : Application(), ReactApplication {

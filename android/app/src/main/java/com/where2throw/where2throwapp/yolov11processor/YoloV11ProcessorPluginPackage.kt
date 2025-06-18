@@ -1,4 +1,4 @@
-package com.gang_03.where2throw.yolov11processor
+package com.where2throw.where2throwapp.yolov11processor
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule

@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.gang_03.where2throw'
+    namespace 'com.where2throw.where2throwapp'
     defaultConfig {
-        applicationId 'com.gang_03.where2throw'
+        applicationId 'com.where2throw.where2throwapp'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

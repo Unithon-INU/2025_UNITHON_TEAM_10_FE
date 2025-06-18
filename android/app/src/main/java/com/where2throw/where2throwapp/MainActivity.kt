@@ -1,4 +1,4 @@
-package com.gang_03.where2throw
+package com.where2throw.where2throwapp
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build
