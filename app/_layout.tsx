@@ -11,6 +11,7 @@ import {
 } from "@tanstack/react-query";
 import { BottomTabBar, BottomTabView } from "@react-navigation/bottom-tabs";
 import AuthApi from "@/api/auth";
+import { Button, ButtonText } from "@/components/ui/button";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -60,7 +61,18 @@ export default function RootLayout() {
           ></Stack.Screen>
           <Stack.Screen
             name="article/[id]"
-            options={{ title: '게시글', headerBackButtonDisplayMode: "minimal" }}
+            options={{
+              title: "게시글",
+              headerBackButtonDisplayMode: "minimal",
+            }}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="article/write"
+            options={{
+              title: "글 작성",
+              headerBackButtonDisplayMode: "minimal",
+              headerRight: () => <Button><ButtonText>작성</ButtonText></Button>,
+            }}
           ></Stack.Screen>
 
           <Stack.Screen

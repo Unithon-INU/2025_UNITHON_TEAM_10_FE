@@ -5,7 +5,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Input, InputField } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useState, useMemo, Children, useEffect } from "react";
@@ -68,14 +68,14 @@ const ArticleInfo = ({
   viewCnt,
   commentCnt,
   align = "left",
-  className = '',
+  className = "",
 }: {
   author?: string;
   regDt?: string;
   viewCnt?: number;
   commentCnt?: number;
   align?: "left" | "center" | "right";
-  className?: string
+  className?: string;
 }) => {
   const alignMap = {
     left: "start",
@@ -135,23 +135,25 @@ export default function Page() {
     getNextPageParam: () => 0,
   });
 
-
   return (
     <>
       <SafeAreaView className="bg-primary-500" />
-        <FocusAwareStatusBar
-          animated={true}
-          backgroundColor={"#5EDAA3"}
-          barStyle={'light-content'}
-          />
+      <FocusAwareStatusBar
+        animated={true}
+        backgroundColor={"#5EDAA3"}
+        barStyle={"light-content"}
+      />
       <VStack className=" bg-primary-500 p-5 gap-3">
         <HStack className="justify-between">
           <Text className="text-highlight-lg " style={{ color: "white" }}>
             커뮤니티
           </Text>
-          <Box className="bg-[#3EF4A4] aspect-square p-1 rounded-xl">
+          <TouchableOpacity
+            className="bg-[#3EF4A4] aspect-square p-1 rounded-xl"
+            onPress={() => router.push("/article/write")}
+          >
             <MaterialIcons name="add" color="white" size={30} />
-          </Box>
+          </TouchableOpacity>
         </HStack>
         <HStack className="justify-center  py-4 bg-background-500 rounded-xl">
           <MaterialIcons name="search" size={32} color="#6d6d6d" />
