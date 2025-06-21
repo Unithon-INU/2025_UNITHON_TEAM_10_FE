@@ -48,18 +48,22 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <Stack>
           <Stack.Screen
+            key="tabs"
             name="(tabs)"
             options={{ headerShown: false }}
           ></Stack.Screen>
           <Stack.Screen
+            key="index"
             name="index"
             options={{ headerShown: false }}
           ></Stack.Screen>
           <Stack.Screen
+            key="login"
             name="(auth)/login"
             options={{ headerShown: false }}
           ></Stack.Screen>
           <Stack.Screen
+            key="article_read"
             name="article/[id]"
             options={{
               title: "게시글",
@@ -67,6 +71,7 @@ export default function RootLayout() {
             }}
           ></Stack.Screen>
           <Stack.Screen
+            key="article_write"
             name="article/write"
             options={{
               title: "글 작성",
@@ -76,6 +81,7 @@ export default function RootLayout() {
           ></Stack.Screen>
 
           <Stack.Screen
+            key="scan"
             name="scan"
             options={{
               headerTitle: "물체 스캔",

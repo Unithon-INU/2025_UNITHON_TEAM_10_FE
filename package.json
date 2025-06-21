@@ -5,10 +5,9 @@
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "DARK_MODE=media expo run:android",
-    "ios": "DARK_MODE=media expo run:ios --device",
-    "web": "DARK_MODE=media expo start --web",
-    "test": "jest --watchAll",
+    "android": "cross-env DARK_MODE=media expo run:android",
+    "ios": "cross-env DARK_MODE=media expo run:ios --device",
+    "web": "cross-env DARK_MODE=media expo start --web",
     "lint": "expo lint",
     "build:android": "cross-env-shell \"cd android && ./gradlew assembleRelease\""
   },
@@ -62,6 +61,7 @@
     "expo-haptics": "~14.0.1",
     "expo-image-picker": "~16.0.6",
     "expo-linking": "~7.0.5",
+    "expo-location": "~18.0.10",
     "expo-router": "~4.0.20",
     "expo-splash-screen": "~0.29.22",
     "expo-status-bar": "~2.0.1",
@@ -78,14 +78,13 @@
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "^5.4.1",
     "react-native-screens": "~4.4.0",
-    "react-native-svg": "^15.2.0",
+    "react-native-svg": "^15.12.0",
     "react-native-vision-camera": "^4.6.4",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "react-native-worklets-core": "^1.5.0",
     "tailwindcss": "^3.4.17",
-    "vision-camera-resize-plugin": "^3.2.0",
-    "expo-location": "~18.0.10"
+    "vision-camera-resize-plugin": "^3.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
