@@ -302,6 +302,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem/ExpoFileSystem_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI/ExpoSystemUI_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly/RCT-Folly_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RNSVG/RNSVGFilters.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/boost/boost_privacy.bundle",
@@ -314,6 +315,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoFileSystem_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoSystemUI_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCT-Folly_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNSVGFilters.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
@@ -572,7 +574,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.where2throw.where2throwapp;
-				PRODUCT_NAME = "where2throw";
+				PRODUCT_NAME = where2throw;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_INCLUDE_PATHS = "$(inherited) \"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants\" \"${PODS_CONFIGURATION_BUILD_DIR}/Expo\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoAsset\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoBlur\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFont\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHaptics\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHead\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoKeepAwake\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoLinking\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoModulesCore\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSplashScreen\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSymbols\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoWebBrowser\" \"${PODS_CONFIGURATION_BUILD_DIR}/VisionCamera\" $(SRCROOT)/../node_modules/react-native-vision-camera/ios/FrameProcessors/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "where2throw/where2throw-Bridging-Header.h";
@@ -786,7 +788,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.where2throw.where2throwapp;
-				PRODUCT_NAME = "where2throw";
+				PRODUCT_NAME = where2throw;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_INCLUDE_PATHS = "$(inherited) \"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants\" \"${PODS_CONFIGURATION_BUILD_DIR}/Expo\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoAsset\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoBlur\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFont\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHaptics\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHead\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoKeepAwake\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoLinking\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoModulesCore\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSplashScreen\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSymbols\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoWebBrowser\" \"${PODS_CONFIGURATION_BUILD_DIR}/VisionCamera\" $(SRCROOT)/../node_modules/react-native-vision-camera/ios/FrameProcessors/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "where2throw/where2throw-Bridging-Header.h";
