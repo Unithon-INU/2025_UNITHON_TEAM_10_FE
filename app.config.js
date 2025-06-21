@@ -6,7 +6,13 @@ module.exports = ({ config }) => {
       "name": "where2throw",
       "slug": "where2throw",
       "extra": {
-        NCP_MAP_API_KEY: process.env.NCP_MAP_API_KEY
+        NCP_MAP_API_KEY: process.env.NCP_MAP_API_KEY,
+        "router": {
+          "origin": false
+        },
+        "eas": {
+          "projectId": "b88499c3-8c36-449a-a4d8-f658173e3330"
+        }
       },
       "version": "1.0.0",
       "orientation": "portrait",
@@ -20,7 +26,9 @@ module.exports = ({ config }) => {
         "supportsTablet": true,
         "infoPlist": {
           "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera.",
-          "NSMicrophoneUsageDescription": "$(PRODUCT_NAME) needs access to your Microphone."
+          "NSMicrophoneUsageDescription": "$(PRODUCT_NAME) needs access to your Microphone.",
+          "NSLocalNetworkUsageDescription": "This app requires access to the local network to connect to the development server.",
+          "NSBonjourServices": ["_http._tcp"] // 이건 Bonjour 탐색용
         },
         "bundleIdentifier": "com.where2throw.where2throwapp",
         "appleTeamId": "JFM39N7Z6U"
@@ -105,14 +113,6 @@ module.exports = ({ config }) => {
       "experiments": {
         "typedRoutes": true
       },
-      "extra": {
-        "router": {
-          "origin": false
-        },
-        "eas": {
-          "projectId": "b88499c3-8c36-449a-a4d8-f658173e3330"
-        }
-      }
     }
   }
 }

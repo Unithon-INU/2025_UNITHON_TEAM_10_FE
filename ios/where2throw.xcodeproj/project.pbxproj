@@ -16,6 +16,7 @@
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		B5D2C425621841C5A79B36DF /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD0D47D0512740F2A24F5E84 /* CoreML.framework */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
+		D5D094E02E03B035001BF23D /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = D5D094DF2E03B035001BF23D /* main.jsbundle */; };
 		D5E98DAF2DD06BE9009A3406 /* TrashSorter.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5E98DAD2DD06BE9009A3406 /* TrashSorter.mm */; };
 		D5E98DB32DD06E8D009A3406 /* Yolo11N.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = D5E98DB22DD06E8D009A3406 /* Yolo11N.mlpackage */; };
 		F58E69384E7B4626A4F204BB /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C8E7A9D0D54E139CAB65CA /* noop-file.swift */; };
@@ -36,6 +37,7 @@
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = where2throw/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		CD0D47D0512740F2A24F5E84 /* CoreML.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
+		D5D094DF2E03B035001BF23D /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		D5E98DAC2DD06BE9009A3406 /* TrashSorter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrashSorter.h; sourceTree = "<group>"; };
 		D5E98DAD2DD06BE9009A3406 /* TrashSorter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TrashSorter.mm; sourceTree = "<group>"; };
 		D5E98DB22DD06E8D009A3406 /* Yolo11N.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = Yolo11N.mlpackage; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				D5D094DF2E03B035001BF23D /* main.jsbundle */,
 				13B07FAE1A68108700A75B9A /* where2throw */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -194,7 +197,6 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1250;
-						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -221,6 +223,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5D094E02E03B035001BF23D /* main.jsbundle in Resources */,
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
@@ -570,6 +573,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.where2throw.where2throwapp;
 				PRODUCT_NAME = "where2throw";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_INCLUDE_PATHS = "$(inherited) \"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants\" \"${PODS_CONFIGURATION_BUILD_DIR}/Expo\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoAsset\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoBlur\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFont\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHaptics\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHead\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoKeepAwake\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoLinking\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoModulesCore\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSplashScreen\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSymbols\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoWebBrowser\" \"${PODS_CONFIGURATION_BUILD_DIR}/VisionCamera\" $(SRCROOT)/../node_modules/react-native-vision-camera/ios/FrameProcessors/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "where2throw/where2throw-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -783,6 +787,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.where2throw.where2throwapp;
 				PRODUCT_NAME = "where2throw";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_INCLUDE_PATHS = "$(inherited) \"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants\" \"${PODS_CONFIGURATION_BUILD_DIR}/Expo\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoAsset\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoBlur\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFont\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHaptics\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoHead\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoKeepAwake\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoLinking\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoModulesCore\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSplashScreen\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSymbols\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI\" \"${PODS_CONFIGURATION_BUILD_DIR}/ExpoWebBrowser\" \"${PODS_CONFIGURATION_BUILD_DIR}/VisionCamera\" $(SRCROOT)/../node_modules/react-native-vision-camera/ios/FrameProcessors/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "where2throw/where2throw-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
