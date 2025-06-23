@@ -68,7 +68,6 @@ module.exports = ({ config }) => {
             "cameraPermissionText": "$(PRODUCT_NAME) needs access to your Camera.",
             "enableMicrophonePermission": true,
             "microphonePermissionText": "$(PRODUCT_NAME) needs access to your Microphone.",
-            "enableCodeScanner": true
           }
         ],
         [
