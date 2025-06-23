@@ -61,7 +61,7 @@ export const StatCard = ({
 };
 
 export default function Page() {
-  const tabItems = ["요약", "통계", "업적"];
+  const tabItems = ["요약"];
   const [currentTab, setCurrentTab] = useState(0);
 
   const [chartWidth, setChartWidth] = useState<number>();

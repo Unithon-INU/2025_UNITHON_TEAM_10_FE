@@ -180,7 +180,7 @@
         [self->ciContext render:ciImage toCVPixelBuffer:destPixelBuffer];
 
         float iouThreshold = 0.5;
-        float confidenceThreshold = 0.5;
+      float confidenceThreshold = 0.5;
         if (arguments != nil) {
             if (arguments[@"iouThreshold"] != nil)
                 iouThreshold = [arguments[@"iouThreshold"] floatValue];

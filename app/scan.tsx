@@ -32,8 +32,7 @@ import { VStack } from "@/components/ui/vstack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Text } from "@/components/ui/text";
 import { HStack } from "@/components/ui/hstack";
-import { Image } from "@/components/ui/image";
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
+import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
 
 const plugin = VisionCameraProxy.initFrameProcessorPlugin("detect", {});
