@@ -64,7 +64,7 @@ export default function RootLayout() {
           ></Stack.Screen>
           <Stack.Screen
             key="article_read"
-            name="article/[id]"
+            name="article/[categoryId]/[id]"
             options={{
               title: "게시글",
               headerBackButtonDisplayMode: "minimal",
@@ -72,7 +72,7 @@ export default function RootLayout() {
           ></Stack.Screen>
           <Stack.Screen
             key="article_write"
-            name="article/write"
+            name="article/[categoryId]/write"
             options={{
               title: "글 작성",
               headerBackButtonDisplayMode: "minimal",

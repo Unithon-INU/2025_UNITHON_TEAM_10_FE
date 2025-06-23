@@ -5,10 +5,10 @@ import { HStack } from "@/components/ui/hstack";
 import { Input, InputField } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { FontAwesome, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { useState, useMemo, Children, useEffect } from "react";
+import { useState, useMemo, } from "react";
 import {
   Appearance,
   FlatList,
@@ -124,15 +124,26 @@ export default function Page() {
   );
 
   const [selectedCategory, setSelectedCategory] = useState<string>("전체");
-  const categories = ["자유게시판", "공지사항", "Q&A", "아티클"];
-
+  const categories = ["free", "공지사항", "Q&A", "아티클"];
+  
   const articleQuery = useInfiniteQuery({
-    queryKey: ["article"],
-    queryFn: async ({ pageParam }) => {
-      return await ArticleApi.fetchArticles({ page: pageParam });
+    queryKey: ["articles", selectedCategory],
+    queryFn: async ({ pageParam = 1, queryKey: [_, category]}) => {
+      console.log('hi')
+      const response = await ArticleApi.fetchArticles({
+        page: pageParam,
+        category: category == '전체' ? undefined : category,
+      });
+
+      console.log(response);
+      return response;
     },
-    initialPageParam: 0,
-    getNextPageParam: () => 0,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      console.log(lastPage)
+      const nextPage = lastPage.currentPage + 1;
+      return nextPage <= lastPage.totalPages ? nextPage : undefined;
+    },
   });
 
   return (
@@ -150,7 +161,7 @@ export default function Page() {
           </Text>
           <TouchableOpacity
             className="bg-[#3EF4A4] aspect-square p-1 rounded-xl"
-            onPress={() => router.push("/article/write")}
+            onPress={() => router.push(`/article/${selectedCategory}/write`)}
           >
             <MaterialIcons name="add" color="white" size={30} />
           </TouchableOpacity>
@@ -192,14 +203,14 @@ export default function Page() {
           ))}
         </HStack>
         <FlatList
-          data={articleQuery.data?.pages.flat()}
+          data={articleQuery.data?.pages.flatMap((page) => page.posts)}
           contentContainerClassName="p-5 gap-5"
           className="h-full"
           refreshing={articleQuery.isRefetching}
           onRefresh={() => articleQuery.refetch()}
           renderItem={(data) => (
             <ContentCard
-              onPress={() => router.push("/article/1")}
+              onPress={() => router.push(`/article/${selectedCategory}/${data.item.id}`)}
               {...data.item}
               bottomSlot={<ArticleInfo {...data.item} />}
             />

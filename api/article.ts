@@ -1,76 +1,67 @@
+import api, { ResponseWrapper } from "./api";
+
+export interface Pageable {
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+}
+
+export interface Article {
+  id: number;
+  title: string;
+  author: string;
+  createdAt: string;
+  viewCnt: number;
+  content: string;
+}
+export interface Comment {
+  id: number;
+  author: string;
+  content: string;
+  createdAt: string;
+  isAuthor: boolean;
+}
+export interface ArticleDetail extends Article {
+  comments: Comment[];
+  imageUrls: string[];
+  isAuthor: boolean;
+}
+export interface ArticlePageable extends Pageable {
+  posts: Article[];
+}
+
 export default class ArticleApi {
-  static async fetchArticles({ page }: { page: number }) {
-    return [
-      {
-        title: "제로웨이스트 카페 추천",
-        content: "텀블러 지참하면 할인해주는 친환경 카페들을 모아봤어요!",
-        author: "에코워리어",
-        regDt: "2025-06-20",
-        viewCnt: 400,
-        commentCnt: 10,
-      },
-    ];
+  static async fetchArticles({
+    page,
+    category,
+  }: {
+    page: number;
+    category?: string;
+  }) {
+    return (
+      await api
+        .get(`posts/${category ?? ""}`, {
+          searchParams: { page, pageSize: 10 },
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJja20wNzI4d2FzaEBnbWFpbC5jb20iLCJpYXQiOjE3NTA2NjMxMDMsImV4cCI6MTc1MDc0OTUwM30.nn7cRRZ1D7mr9opPri7D8uXNN3xqFyvqnvSwKT_oaOA",
+          },
+        })
+        .json<ResponseWrapper<ArticlePageable>>()
+    ).data;
   }
 
-  static async fetchArticle(id: string) {
-    return {
-      title: "제로웨이스트 카페 추천",
-      content: "텀블러 지참하면 할인해주는 친환경 카페들을 모아봤어요!",
-      author: "에코워리어",
-      regDt: "2025-06-20",
-      viewCnt: 400,
-      isAuthor: true,
-      comments: [
-        {
-          author: "갱갱갱",
-          content: "내가 바로 갱갱갱이다",
-          createdAt: "2025-07-…",
-          isAuthor: true,
-          authorLv: 1,
-        },
-        {
-          author: "갱갱갱",
-          content: "내가 바로 갱갱갱이다",
-          createdAt: "2025-07-…",
-          isAuthor: true,
-          authorLv: 1,
-        },
-        {
-          author: "갱갱갱",
-          content: "내가 바로 갱갱갱이다",
-          createdAt: "2025-07-…",
-          isAuthor: true,
-          authorLv: 1,
-        },
-        {
-          author: "갱갱갱",
-          content: "내가 바로 갱갱갱이다",
-          createdAt: "2025-07-…",
-          isAuthor: true,
-          authorLv: 1,
-        },
-        {
-          author: "갱갱갱",
-          content: "내가 바로 갱갱갱이다",
-          createdAt: "2025-07-…",
-          isAuthor: true,
-          authorLv: 1,
-        },
-        {
-          author: "갱갱갱",
-          content: "내가 바로 갱갱갱이다",
-          createdAt: "2025-07-…",
-          isAuthor: true,
-          authorLv: 1,
-        },
-        {
-          author: "갱갱갱",
-          content: "내가 바로 갱갱갱이다",
-          createdAt: "2025-07-…",
-          isAuthor: true,
-          authorLv: 1,
-        },
-      ],
-    };
+  static async fetchArticle(categoryId: string, articleId: number) {
+    console.log(categoryId, articleId);
+    return (
+      await api
+        .get(`posts/${categoryId}/${articleId}`, {
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJja20wNzI4d2FzaEBnbWFpbC5jb20iLCJpYXQiOjE3NTA2NjMxMDMsImV4cCI6MTc1MDc0OTUwM30.nn7cRRZ1D7mr9opPri7D8uXNN3xqFyvqnvSwKT_oaOA",
+          },
+        })
+        .json<ResponseWrapper<ArticleDetail>>()
+    ).data;
   }
 }
