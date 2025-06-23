@@ -1,16 +1,23 @@
 package com.where2throw.where2throwapp.yolov11processor
 
+import android.content.res.AssetFileDescriptor
 import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Matrix
 import android.graphics.RectF
 import android.media.Image
 import android.util.Log
+import androidx.camera.core.ImageProxy
+import com.facebook.react.bridge.Arguments // Still useful for creating nested WritableNativeMaps/Arrays if you want
+import com.facebook.react.bridge.WritableNativeArray
+import com.facebook.react.bridge.WritableNativeMap
 import com.mrousavy.camera.frameprocessors.Frame
 import com.mrousavy.camera.frameprocessors.FrameProcessorPlugin
 import com.mrousavy.camera.frameprocessors.VisionCameraProxy
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
+import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.MappedByteBuffer
@@ -36,12 +43,14 @@ class YoloV11ProcessorPlugin(proxy: VisionCameraProxy, options: Map<String, Any>
         private const val BBOX_COORDS = 4 // x_center, y_center, width, height
 
         // 출력 텐서 [1, 84, 8400] 에서 84 = 4 (bbox) + NUM_CLASSES
-        private const val NUM_MODEL_CLASSES = 6 // 예: COCO 모델의 경우 (84 - 4)
-        private const val NUM_PREDICTIONS = 296 // 출력 텐서의 마지막 차원
+        private const val NUM_MODEL_CLASSES = 7 // 예: COCO 모델의 경우 (84 - 4)
+        private const val NUM_PREDICTIONS = 8400 // 출력 텐서의 마지막 차원
     }
 
     init {
         Log.d(TAG, "TrashSorterPlugin initialized with options: $options")
+        classNames = listOf("paper", "plastic", "can", "glass") // Todo: 실제 클래스 이름으로 대체
+        Log.d(TAG, "Class names loaded: $classNames")
     }
 
     private fun loadModelFile(assetManager: AssetManager, modelPath: String): MappedByteBuffer {
@@ -54,7 +63,6 @@ class YoloV11ProcessorPlugin(proxy: VisionCameraProxy, options: Map<String, Any>
             }
         }
     }
-
     private data class PreprocessingResult(
         val processedBitmap: Bitmap,
         val scale: Float,
@@ -250,23 +258,35 @@ class YoloV11ProcessorPlugin(proxy: VisionCameraProxy, options: Map<String, Any>
                 val bottom = yCenter + height / 2f
 
                 val boundingBox = RectF(left, top, right, bottom)
-                Log.d(TAG, "${xCenterNorm} | ${yCenterNorm} | ${widthNorm} | ${heightNorm}")
-
-                candidates.add(DetectionCandidate(boundingBox, maxClassScore, detectedClassIndex))
+                // 5. 원본 이미지 기준으로 다시 조정 (scale & pad 고려)
+                val calibratedBox = adjustBoundingBoxToOriginal(
+                    boundingBox,
+                    pr.scale,
+                    pr.padX,
+                    pr.padY,
+                    pr.originalWidth,
+                    pr.originalHeight
+                )
+                candidates.add(DetectionCandidate(calibratedBox, maxClassScore, detectedClassIndex))
             }
         }
         Log.d(TAG, "Candidates before NMS: ${candidates.size}")
 
         // NMS 적용
-//        val finalDetections = nonMaxSuppression(candidates, iouThreshold)
-//        Log.d(TAG, "Detections after NMS: ${finalDetections.size}")
+        val finalDetections = nonMaxSuppression(candidates, iouThreshold)
+        Log.d(TAG, "Detections after NMS: ${finalDetections.size}")
 
         // --- 여기서부터 변경 ---
         val detectionsList = mutableListOf<Map<String, Any>>() // Use Kotlin List and Map
-        for (det in candidates) {
+        for (det in finalDetections) {
             val detectionMap = mutableMapOf<String, Any>()
             detectionMap["classId"] = det.classIndex // 0-79 범위의 모델 클래스 ID
 
+            if (det.classIndex >= 0 && det.classIndex < classNames.size) {
+                detectionMap["className"] = classNames[det.classIndex]
+            } else {
+                detectionMap["className"] = "unknown_class_idx_${det.classIndex}"
+            }
 
             detectionMap["confidence"] = det.score.toDouble()
 
@@ -286,7 +306,7 @@ class YoloV11ProcessorPlugin(proxy: VisionCameraProxy, options: Map<String, Any>
         val endTime = System.currentTimeMillis()
         Log.d(
             TAG,
-            "Frame processing time: ${endTime - startTime} ms (${candidates.size} detections)"
+            "Frame processing time: ${endTime - startTime} ms (${finalDetections.size} detections)"
         )
 
         // Return a standard Kotlin Map
