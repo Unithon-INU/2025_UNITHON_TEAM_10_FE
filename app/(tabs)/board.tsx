@@ -124,7 +124,7 @@ export default function Page() {
   );
 
   const [selectedCategory, setSelectedCategory] = useState<string>("전체");
-  const categories = ["free", "공지사항", "Q&A", "아티클"];
+  const categories = ["자유게시판", "공지사항", "Q&A", "아티클"];
   
   const articleQuery = useInfiniteQuery({
     queryKey: ["articles", selectedCategory],
@@ -132,7 +132,8 @@ export default function Page() {
       console.log('hi')
       const response = await ArticleApi.fetchArticles({
         page: pageParam,
-        category: category == '전체' ? undefined : category,
+        category,
+        // category: category == '전체' ? undefined : category,
       });
 
       console.log(response);
@@ -204,8 +205,7 @@ export default function Page() {
         </HStack>
         <FlatList
           data={articleQuery.data?.pages.flatMap((page) => page.posts)}
-          contentContainerClassName="p-5 gap-5"
-          className="h-full"
+          contentContainerClassName="p-5 gap-5 h-full"
           refreshing={articleQuery.isRefetching}
           onRefresh={() => articleQuery.refetch()}
           renderItem={(data) => (

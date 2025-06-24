@@ -1,5 +1,30 @@
+import api, { ResponseWrapper } from "./api";
+
 export default class AuthApi {
   static async checkLogin() {
-    return false;
+    return await api
+      .get("users/me/profile")
+      .json<{ username: string; profileImageUrl: string }>();
+  }
+
+  /**
+   *
+   * @param email
+   * @param password
+   * @returns 사용자의 토큰을 반환합니다.
+   */
+  static async login(email: string, password: string) {
+    return (
+      await api
+        .post("auth/login", {
+          json: { email, password },
+        })
+        .json<{ token: string }>()
+    ).token;
+  }
+
+  static async regsiter(email: string, password: string) {
+    if (!(await api.post("auth/register", { json: { email, password } })).ok)
+      throw new Error("회원가입 실패 ");
   }
 }

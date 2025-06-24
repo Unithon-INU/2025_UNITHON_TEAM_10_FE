@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView, ScrollView, TouchableHighlight } from "react-native";
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
@@ -9,14 +9,27 @@ import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Input, InputField } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { router} from "expo-router";
-
+import { router } from "expo-router";
+import AuthApi from "@/api/auth";
+import * as SecureStorage from 'expo-secure-store'
 
 export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
 
-   const handleLogin = () => {
-    router.navigate("/(tabs)");
+  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+  const setFormField = (key: keyof typeof loginForm, value: string) => {
+    setLoginForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleLogin = async () => {
+    try {
+      const token = await AuthApi.login(loginForm.email, loginForm.password);
+      await SecureStorage.setItemAsync('token', token);
+      router.navigate("/(tabs)");
+    } catch (e) {
+      console.error(e)
+      alert("로그인에 실패했어요.. 🥲")
+    }
   };
 
   return (
@@ -37,8 +50,12 @@ export default function LoginScreen() {
           <HStack className="py-2 bg-background-500 rounded-t-xl">
             <Input className="border-0 text-center drop-shadow-xl w-[100%]">
               <InputField
-                placeholder="아이디를 입력해주세요."
+                placeholder="이메일을 입력해주세요."
                 className="font-nanum-square"
+                value={loginForm.email}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                onChangeText={(value) => setFormField("email", value)}
               />
             </Input>
           </HStack>
@@ -48,6 +65,8 @@ export default function LoginScreen() {
               <InputField
                 placeholder="비밀번호를 입력해주세요."
                 secureTextEntry={!showPassword}
+                value={loginForm.password}
+                onChangeText={(value) => setFormField("password", value)}
               />
             </Input>
           </HStack>

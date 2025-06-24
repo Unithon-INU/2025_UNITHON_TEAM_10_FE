@@ -25,7 +25,7 @@ export default function RootLayout() {
     if (loaded)
       AuthApi.checkLogin().then((res) => {
         SplashScreen.hide();
-        setLoginCheck(res);
+        setLoginCheck(true);
         if (res) router.replace("/(tabs)");
         else router.replace("/(auth)/login");
       });
@@ -76,7 +76,11 @@ export default function RootLayout() {
             options={{
               title: "글 작성",
               headerBackButtonDisplayMode: "minimal",
-              headerRight: () => <Button><ButtonText>작성</ButtonText></Button>,
+              headerRight: () => (
+                <Button>
+                  <ButtonText>작성</ButtonText>
+                </Button>
+              ),
             }}
           ></Stack.Screen>
 
