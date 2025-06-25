@@ -83,17 +83,17 @@ const ArticleInfo = ({
     right: "end",
   };
   return (
-    <HStack className={`gap-3 justify-${alignMap[align]} ${className}`}>
+    <HStack className={`gap-3 justify-${alignMap[align]} items-center ${className}`}>
       {author && <Text>{author}</Text>}
       {createdAt && <Text>{createdAt}</Text>}
       {viewCnt && (
-        <HStack className="gap-1">
+        <HStack className="gap-1 items-center">
           <FontAwesome name="eye"></FontAwesome>
           <Text>{viewCnt}</Text>
         </HStack>
       )}
       {commentCnt && (
-        <HStack className="gap-1">
+        <HStack className="gap-1 items-center">
           <FontAwesome name="comment"></FontAwesome>
           <Text>{commentCnt}</Text>
         </HStack>

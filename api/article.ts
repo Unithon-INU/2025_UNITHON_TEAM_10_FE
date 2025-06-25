@@ -38,21 +38,26 @@ export default class ArticleApi {
     page: number;
     category?: string;
   }) {
-    return (
-      await api
-        .get(`posts/${category ?? ""}`, {
-          searchParams: { page, pageSize: 10 },
-        })
-        .json<ArticlePageable>()
-      );
+    return await api
+      .get(`posts/${category ?? ""}`, {
+        searchParams: { page, pageSize: 10 },
+      })
+      .json<ArticlePageable>();
   }
 
-  static async fetchArticle(categoryId: string, articleId: number) {
+  static async fetchArticle(categoryId: string, articleId: number, isRefetch: boolean) {
     console.log(categoryId, articleId);
-    return (
-      await api
-        .get(`posts/${categoryId}/${articleId}`)
-        .json<ArticleDetail>()
-    )
+    return await api
+      .get(`posts/${categoryId}/${articleId}?isRefetch=${isRefetch}`)
+      .json<ArticleDetail>();
+  }
+  static async writeComment(
+    categoryId: string,
+    articleId: string,
+    content: string
+  ) {
+    await api.post(`posts/${categoryId}/${articleId}/comments`, {
+      json: { content },
+    });
   }
 }
