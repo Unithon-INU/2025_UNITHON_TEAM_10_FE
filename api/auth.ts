@@ -23,12 +23,18 @@ export default class AuthApi {
     ).token;
   }
 
-  static async regsiter(email: string, password: string) {
-    if (!(await api.post("auth/register", { json: { email, password } })).ok)
+  static async regsiter(email: string, password: string, nickname: string) {
+    if (
+      !(
+        await api.post("auth/register", {
+          json: { email, password, username: nickname },
+        })
+      ).ok
+    )
       throw new Error("회원가입 실패 ");
   }
 
   static async logout() {
-    await api.post('auth/logout');
+    await api.post("auth/logout");
   }
 }

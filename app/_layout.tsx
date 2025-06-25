@@ -35,12 +35,12 @@ export default function RootLayout() {
         router.replace("/(auth)/login");
         setLoginCheck(false);
       }
-      else router.replace("/(auth)/login");
+    else router.replace("/(auth)/login");
   };
 
   useEffect(() => {
     if (loaded) {
-      checkLogin()
+      checkLogin();
     }
   }, [loaded]);
 
@@ -74,6 +74,15 @@ export default function RootLayout() {
             key="login"
             name="(auth)/login"
             options={{ headerShown: false }}
+          ></Stack.Screen>
+          <Stack.Screen
+            key="register"
+            name="(auth)/register"
+            options={{
+              headerTransparent: true,
+              headerBackButtonDisplayMode: "minimal",
+              headerTitle: ''
+            }}
           ></Stack.Screen>
           <Stack.Screen
             key="article_read"

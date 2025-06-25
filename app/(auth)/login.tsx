@@ -86,6 +86,7 @@ export default function LoginScreen() {
           <TouchableHighlight
             className="w-[50%] items-center"
             underlayColor="transparent"
+            onPress={() => router.push('/(auth)/register')}
           >
             <Text>회원가입</Text>
           </TouchableHighlight>
