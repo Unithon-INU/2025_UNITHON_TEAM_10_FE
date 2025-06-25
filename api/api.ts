@@ -6,35 +6,39 @@ const truncateMicroseconds = (value: string): string =>
   value.replace(/(\.\d{3})\d+/, "$1"); // 3자리까지 자름
 
 const isoDateToFormattedString = (
-  data: Record<string, any>
-): Record<string, any> => {
-  const result: Record<string, any> = {};
-
-  for (const [key, value] of Object.entries(data)) {
-    if (typeof value === "string") {
-      const parsed = parseISO(truncateMicroseconds(value));
-      if (isValid(parsed)) {
-        result[key] = format(parsed, "yyyy-MM-dd HH:mm:ss");
-      } else {
-        result[key] = value;
-      }
-    } else if (Array.isArray(value)) {
-      result[key] = value.map((item) =>
-        typeof item === "object" && item !== null
-          ? isoDateToFormattedString(item)
-          : typeof item === "string" && isValid(parseISO(truncateMicroseconds(item)))
-          ? format(parseISO(truncateMicroseconds(item)), "yyyy-MM-dd HH:mm:ss")
-          : item
-      );
-    } else if (typeof value === "object" && value !== null) {
-      result[key] = isoDateToFormattedString(value);
-    } else {
-      result[key] = value;
-    }
+  data: any
+): any => {
+  if (Array.isArray(data)) {
+    return data.map((item) =>
+      typeof item === "object" && item !== null
+        ? isoDateToFormattedString(item)
+        : typeof item === "string" && isValid(parseISO(truncateMicroseconds(item)))
+        ? format(parseISO(truncateMicroseconds(item)), "yyyy-MM-dd HH:mm:ss")
+        : item
+    );
   }
 
-  return result;
+  if (typeof data === "object" && data !== null) {
+    const result: Record<string, any> = {};
+    for (const [key, value] of Object.entries(data)) {
+      if (typeof value === "string") {
+        const parsed = parseISO(truncateMicroseconds(value));
+        if (isValid(parsed)) {
+          result[key] = format(parsed, "yyyy-MM-dd HH:mm:ss");
+        } else {
+          result[key] = value;
+        }
+      } else {
+        result[key] = isoDateToFormattedString(value);
+      }
+    }
+    return result;
+  }
+
+  // 기본적으로 string/object/array 외에는 그대로 반환
+  return data;
 };
+
 
 
 const api = ky.create({
