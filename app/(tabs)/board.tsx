@@ -64,14 +64,14 @@ const ContentCard = ({
 
 const ArticleInfo = ({
   author,
-  regDt,
+  createdAt,
   viewCnt,
   commentCnt,
   align = "left",
   className = "",
 }: {
   author?: string;
-  regDt?: string;
+  createdAt?: string;
   viewCnt?: number;
   commentCnt?: number;
   align?: "left" | "center" | "right";
@@ -85,7 +85,7 @@ const ArticleInfo = ({
   return (
     <HStack className={`gap-3 justify-${alignMap[align]} ${className}`}>
       {author && <Text>{author}</Text>}
-      {regDt && <Text>{regDt}</Text>}
+      {createdAt && <Text>{createdAt}</Text>}
       {viewCnt && (
         <HStack className="gap-1">
           <FontAwesome name="eye"></FontAwesome>
@@ -129,14 +129,11 @@ export default function Page() {
   const articleQuery = useInfiniteQuery({
     queryKey: ["articles", selectedCategory],
     queryFn: async ({ pageParam = 1, queryKey: [_, category]}) => {
-      console.log('hi')
       const response = await ArticleApi.fetchArticles({
         page: pageParam,
-        category,
-        // category: category == '전체' ? undefined : category,
+        category: category == '전체' ? 'all': category,
       });
 
-      console.log(response);
       return response;
     },
     initialPageParam: 1,
@@ -198,6 +195,7 @@ export default function Page() {
                 setSelectedCategory(category);
               }}
               selected={category === selectedCategory}
+              key={category}
             >
               {category}
             </Chip>

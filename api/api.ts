@@ -1,20 +1,32 @@
 import ky from "ky";
 import * as SecureStore from "expo-secure-store";
-import { parseISO, isValid, format } from 'date-fns';
+import { parseISO, isValid, format, parseJSON } from "date-fns";
 
-const isoDateToFormattedString = (data: Record<string, any>): Record<string, any> => {
+const truncateMicroseconds = (value: string): string =>
+  value.replace(/(\.\d{3})\d+/, "$1"); // 3자리까지 자름
+
+const isoDateToFormattedString = (
+  data: Record<string, any>
+): Record<string, any> => {
   const result: Record<string, any> = {};
 
   for (const [key, value] of Object.entries(data)) {
-    if (typeof value === 'string') {
-      const date = parseISO(value); // ISO 문자열 파싱
-      if (isValid(date)) {
-        result[key] = format(date, 'yyyy-MM-dd HH:mm:ss'); // 원하는 포맷으로 변환
+    if (typeof value === "string") {
+      const parsed = parseISO(truncateMicroseconds(value));
+      if (isValid(parsed)) {
+        result[key] = format(parsed, "yyyy-MM-dd HH:mm:ss");
       } else {
         result[key] = value;
       }
-    } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      // 중첩 객체도 재귀 처리
+    } else if (Array.isArray(value)) {
+      result[key] = value.map((item) =>
+        typeof item === "object" && item !== null
+          ? isoDateToFormattedString(item)
+          : typeof item === "string" && isValid(parseISO(truncateMicroseconds(item)))
+          ? format(parseISO(truncateMicroseconds(item)), "yyyy-MM-dd HH:mm:ss")
+          : item
+      );
+    } else if (typeof value === "object" && value !== null) {
       result[key] = isoDateToFormattedString(value);
     } else {
       result[key] = value;
@@ -23,6 +35,7 @@ const isoDateToFormattedString = (data: Record<string, any>): Record<string, any
 
   return result;
 };
+
 
 const api = ky.create({
   prefixUrl: process.env.EXPO_PUBLIC_API_URL,
@@ -104,7 +117,6 @@ const api = ky.create({
     ],
     beforeError: [
       (error) => {
-        console.error("일단 에러잡힘");
         console.error(
           "❌ Request Error Caught by ky beforeError hook:",
           error.name,

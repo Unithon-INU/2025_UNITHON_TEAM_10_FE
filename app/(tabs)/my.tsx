@@ -84,7 +84,7 @@ export default function Page() {
           </Text>
           <TouchableOpacity
             className="bg-[#3EF4A4] aspect-square p-1 rounded-xl"
-            onPress={() => router.push("/article/write")}
+            onPress={() => router.push("/settings")}
           >
             <MaterialIcons name="settings" color="white" size={30} />
           </TouchableOpacity>

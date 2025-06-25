@@ -27,4 +27,8 @@ export default class AuthApi {
     if (!(await api.post("auth/register", { json: { email, password } })).ok)
       throw new Error("회원가입 실패 ");
   }
+
+  static async logout() {
+    await api.post('auth/logout');
+  }
 }

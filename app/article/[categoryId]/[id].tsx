@@ -125,7 +125,7 @@ export default function Page({}) {
             </HStack>
             <ArticleInfo
               author={articleQuery.data.author}
-              regDt={articleQuery.data.createdAt}
+              createdAt={articleQuery.data.createdAt}
             />
           </VStack>
           <Text className="mb-6">{articleQuery.data?.content}</Text>

@@ -102,37 +102,36 @@ export default function Main() {
             </Box>
             <HStack className="gap-5 justify-center items-center">
               {achievements.map((achieve, i) => (
-                <>
+                <HStack key={`achievement-${i}`}>
                   <Meter key={i} unit={achieve.unit} desc={achieve.label}>
                     {achieve.value}
                   </Meter>
                   {i < achievements.length - 1 && (
                     <Divider
-                      key={`div_${i}`}
                       orientation="vertical"
                       className="bg-placeholder w-[0.5px]"
                     />
                   )}
-                </>
+                </HStack>
               ))}
             </HStack>
             <HStack className="bg-background-500 items-center justify-center gap-4 py-4 rounded-xl ">
               {recycleStats.map((stat, i) => (
-                <>
+                <HStack key={`stat-${i}`}>
                   <ImageIcon
-                    key={i}
                     image={require("/assets/images/pet.png")}
                     size="md"
                   />
-                  <Text className="text-highlight-md">{stat.count}</Text>
+                  <Text className="text-highlight-md" key={`stat_${i}`}>
+                    {stat.count}
+                  </Text>
                   {i < recycleStats.length - 1 && (
                     <Divider
-                      key={`div_${i}`}
                       orientation="vertical"
                       className="bg-placeholder w-[0.5px]"
                     />
                   )}
-                </>
+                </HStack>
               ))}
             </HStack>
           </VStack>
@@ -165,7 +164,7 @@ export default function Main() {
               {searchBoxFocused && (
                 <ScrollView className="absolute top-0 w-full  bg-[#f1f1f1] rounded-b-xl z-10 h-48 shadow-drop">
                   {searchResults.data?.map((candidate) => (
-                    <>
+                    <VStack key={`search-result-${candidate}`}>
                       <TouchableHighlight
                         activeOpacity={0.6}
                         underlayColor="#dddddd"
@@ -181,7 +180,7 @@ export default function Main() {
                         orientation="horizontal"
                         className="bg-placeholder h-[0.5px]"
                       />
-                    </>
+                    </VStack>
                   ))}
                 </ScrollView>
               )}

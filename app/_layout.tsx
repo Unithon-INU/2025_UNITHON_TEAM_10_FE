@@ -12,6 +12,7 @@ import {
 import { BottomTabBar, BottomTabView } from "@react-navigation/bottom-tabs";
 import AuthApi from "@/api/auth";
 import { Button, ButtonText } from "@/components/ui/button";
+import * as SecureStorage from "expo-secure-store";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -21,14 +22,26 @@ export default function RootLayout() {
   });
   const [loginCheck, setLoginCheck] = useState<boolean>();
 
-  useEffect(() => {
-    if (loaded)
-      AuthApi.checkLogin().then((res) => {
+  const checkLogin = async () => {
+    const token = await SecureStorage.getItemAsync("token");
+    if (token)
+      try {
+        const res = await AuthApi.checkLogin();
         SplashScreen.hide();
         setLoginCheck(true);
         if (res) router.replace("/(tabs)");
         else router.replace("/(auth)/login");
-      });
+      } catch (e) {
+        router.replace("/(auth)/login");
+        setLoginCheck(false);
+      }
+      else router.replace("/(auth)/login");
+  };
+
+  useEffect(() => {
+    if (loaded) {
+      checkLogin()
+    }
   }, [loaded]);
 
   // loginCheck 로딩중일 때 포함
@@ -89,6 +102,15 @@ export default function RootLayout() {
             name="scan"
             options={{
               headerTitle: "물체 스캔",
+              headerBackButtonDisplayMode: "minimal",
+            }}
+          ></Stack.Screen>
+
+          <Stack.Screen
+            key="settings"
+            name="settings"
+            options={{
+              headerTitle: "설정",
               headerBackButtonDisplayMode: "minimal",
             }}
           ></Stack.Screen>
