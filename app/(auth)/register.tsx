@@ -20,6 +20,20 @@ export default function Page() {
   };
 
   const register = () => {
+    if (
+      !new RegExp(
+        "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
+      ).test(registerForm.email)
+    )
+      return Alert.alert("알림", "이메일 형식이 올바르지 않아요.. 🥲");
+    else if (
+   !new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{8,}$").test(registerForm.password)
+    )
+      return Alert.alert(
+        "알림",
+        "비밀번호는 영대소문자, 숫자, 특수문자를 포함해 8자 이상이어야 해요."
+      );
+    else if (registerForm.nickname.length < 4) return Alert.alert('알림', '닉네임은 4자 이상이어야 해요.')
     AuthApi.regsiter(
       registerForm.email,
       registerForm.password,
