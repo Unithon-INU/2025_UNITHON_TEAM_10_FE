@@ -127,47 +127,79 @@ export default function Scan() {
     frameWidth: number, // 원본 프레임의 실제 너비 (iOS에서 넘어온 값)
     frameHeight: number // 원본 프레임의 실제 높이 (iOS에서 넘어온 값)
   ) => {
-    // 카메라 프리뷰가 화면에 어떻게 표시되는지 계산합니다.
-    // VisionCamera의 `Camera` 컴포넌트는 `style` prop에 따라 자동으로 `aspect-fit` 또는 `aspect-fill`을 처리합니다.
-    // 여기서는 카메라 프리뷰가 화면 전체를 채우지만, 원본 프레임의 가로세로 비율이 유지된다고 가정합니다.
+    if (Platform.OS === "ios") {
+      // 카메라 프리뷰가 화면에 어떻게 표시되는지 계산합니다.
+      // VisionCamera의 `Camera` 컴포넌트는 `style` prop에 따라 자동으로 `aspect-fit` 또는 `aspect-fill`을 처리합니다.
+      // 여기서는 카메라 프리뷰가 화면 전체를 채우지만, 원본 프레임의 가로세로 비율이 유지된다고 가정합니다.
 
-    const cameraAspectRatio = frameWidth / frameHeight;
-    const screenAspectRatio = screenDimensions.width / screenDimensions.height;
+      const cameraAspectRatio = frameWidth / frameHeight;
+      const screenAspectRatio = screenDimensions.width / screenDimensions.height;
 
-    let displayWidth, displayHeight, offsetX, offsetY;
+      let displayWidth, displayHeight, offsetX, offsetY;
 
-    if (cameraAspectRatio > screenAspectRatio) {
-      // 카메라 프레임이 화면보다 상대적으로 가로가 길다 (예: 16:9 프레임이 9:16 화면에 표시)
-      // 화면 너비를 채우고, 위아래에 레터박스(빈 공간)가 생긴다.
-      displayWidth = screenDimensions.width;
-      displayHeight = screenDimensions.width / cameraAspectRatio;
-      offsetX = 0;
-      offsetY = (screenDimensions.height - displayHeight) / 2;
-    } else {
-      // 카메라 프레임이 화면보다 상대적으로 세로가 길다 (예: 9:16 프레임이 16:9 화면에 표시)
-      // 화면 높이를 채우고, 좌우에 필러박스(빈 공간)가 생긴다.
-      displayHeight = screenDimensions.height;
-      displayWidth = screenDimensions.height * cameraAspectRatio;
-      offsetX = (screenDimensions.width - displayWidth) / 2;
-      offsetY = 0;
+      if (cameraAspectRatio > screenAspectRatio) {
+        // 카메라 프레임이 화면보다 상대적으로 가로가 길다 (예: 16:9 프레임이 9:16 화면에 표시)
+        // 화면 너비를 채우고, 위아래에 레터박스(빈 공간)가 생긴다.
+        displayWidth = screenDimensions.width;
+        displayHeight = screenDimensions.width / cameraAspectRatio;
+        offsetX = 0;
+        offsetY = (screenDimensions.height - displayHeight) / 2;
+      } else {
+        // 카메라 프레임이 화면보다 상대적으로 세로가 길다 (예: 9:16 프레임이 16:9 화면에 표시)
+        // 화면 높이를 채우고, 좌우에 필러박스(빈 공간)가 생긴다.
+        displayHeight = screenDimensions.height;
+        displayWidth = screenDimensions.height * cameraAspectRatio;
+        offsetX = (screenDimensions.width - displayWidth) / 2;
+        offsetY = 0;
+      }
+
+      // 중심 좌표 기반의 상대 좌표를 좌측 상단 픽셀 좌표로 변환
+      const xTopLeftRelative = relativeXCenter - relativeWidth / 2;
+      const yTopLeftRelative = relativeYCenter - relativeHeight / 2;
+
+      // 실제 화면 픽셀 좌표로 변환
+      const absoluteX = xTopLeftRelative * displayWidth + offsetX;
+      const absoluteY = yTopLeftRelative * displayHeight + offsetY;
+      const absoluteWidth = relativeWidth * displayWidth;
+      const absoluteHeight = relativeHeight * displayHeight;
+
+      return {
+        x: absoluteX,
+        y: absoluteY,
+        width: absoluteWidth,
+        height: absoluteHeight,
+      };
     }
+    else {
+      const screenWidth = screenDimensions.width;
+      const screenHeight = screenDimensions.height - 56;
+      const screenMinSize = Math.min(screenWidth, screenHeight);
+      const screenMaxSize = Math.max(screenWidth, screenHeight);
+      const screenRatio = screenMinSize / screenMaxSize;
 
-    // 중심 좌표 기반의 상대 좌표를 좌측 상단 픽셀 좌표로 변환
-    const xTopLeftRelative = relativeXCenter - relativeWidth / 2;
-    const yTopLeftRelative = relativeYCenter - relativeHeight / 2;
+      relativeXCenter = relativeXCenter / frameWidth + (1-screenRatio)/2;
+      relativeYCenter = relativeYCenter / frameHeight;
+      relativeWidth = relativeWidth / frameWidth;
+      relativeHeight = relativeHeight / frameHeight;
 
-    // 실제 화면 픽셀 좌표로 변환
-    const absoluteX = xTopLeftRelative * displayWidth + offsetX;
-    const absoluteY = yTopLeftRelative * displayHeight + offsetY;
-    const absoluteWidth = relativeWidth * displayWidth;
-    const absoluteHeight = relativeHeight * displayHeight;
+      const absoluteXCenter = screenWidth * relativeXCenter;
+      const absoluteYCenter = screenHeight * relativeYCenter;
+      const absoluteWidth = relativeWidth * screenMaxSize;
+      const absoluteHeight = relativeHeight * screenMaxSize;
 
-    return {
-      x: absoluteX,
-      y: absoluteY,
-      width: absoluteWidth,
-      height: absoluteHeight,
-    };
+      const absoluteX = absoluteXCenter - absoluteWidth/2;
+      const absoluteY = absoluteYCenter - absoluteHeight/2; 
+      
+      // console.log(relativeXCenter, relativeYCenter, relativeWidth, relativeHeight)
+      // console.log(absoluteXCenter, absoluteYCenter, absoluteWidth, absoluteHeight)
+
+      return {
+        x: absoluteX,
+        y: absoluteY,
+        width: absoluteWidth,
+        height: absoluteHeight,
+      };
+    }
   };
 
   if (!hasPermission) {
