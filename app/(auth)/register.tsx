@@ -6,6 +6,7 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { CommonActions } from "@react-navigation/native";
 import { router, useNavigation } from "expo-router";
+import { HTTPError } from "ky";
 import { useState } from "react";
 import { Alert, SafeAreaView } from "react-native";
 
@@ -27,13 +28,16 @@ export default function Page() {
     )
       return Alert.alert("알림", "이메일 형식이 올바르지 않아요.. 🥲");
     else if (
-   !new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{8,}$").test(registerForm.password)
+      !new RegExp(
+        "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{8,}$"
+      ).test(registerForm.password)
     )
       return Alert.alert(
         "알림",
         "비밀번호는 영대소문자, 숫자, 특수문자를 포함해 8자 이상이어야 해요."
       );
-    else if (registerForm.nickname.length < 4) return Alert.alert('알림', '닉네임은 4자 이상이어야 해요.')
+    else if (registerForm.nickname.length < 4)
+      return Alert.alert("알림", "닉네임은 4자 이상이어야 해요.");
     AuthApi.regsiter(
       registerForm.email,
       registerForm.password,
@@ -48,7 +52,19 @@ export default function Page() {
       })
       .catch((e) => {
         console.error(e);
-        Alert.alert("알림 ", "회원가입에 실패했어요.. 🥲");
+        if (e instanceof HTTPError) {
+          switch (e.response.status) {
+            case 409: {
+              Alert.alert("오류", "이미 존재하는 이메일이예요.");
+              break;
+            }
+            case 400: {
+              Alert.alert("오류", "올바르게 입력되지 않은 항목이 있어요.")
+            }
+            default:
+              Alert.alert("알림 ", "회원가입에 실패했어요.. 🥲");
+          }
+        }
       });
   };
 

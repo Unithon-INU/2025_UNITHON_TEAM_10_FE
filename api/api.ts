@@ -136,6 +136,7 @@ const api = ky.create({
             "🔗 Error Request Headers:",
             Object.fromEntries(error.request.headers.entries())
           );
+          return error;
         }
         if (error.response) {
           console.error("📄 Error Response Status:", error.response.status);
@@ -150,6 +151,7 @@ const api = ky.create({
                 e.message
               );
             });
+          return error;
         }
         // If it's a TypeError: Network request failed, the error.response will often be undefined.
         if (
