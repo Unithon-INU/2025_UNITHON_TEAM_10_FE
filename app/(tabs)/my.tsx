@@ -17,6 +17,8 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
 import { ArticleInfo } from "./board";
 import { Text } from "@/components/ui/text";
@@ -26,6 +28,10 @@ import { Card } from "@/components/ui/card";
 import { Icon } from "@/components/ui/icon";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { LineChart } from "react-native-chart-kit";
+import { useQuery } from "@tanstack/react-query";
+import SimpleVictoryChart from "@/lib/test";
+import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
+import DashboardApi from "@/api/dashboard";
 
 type StatCardProps = {
   title: string;
@@ -41,7 +47,7 @@ export const StatCard = ({
   colorClass = "bg-primary-500",
 }: StatCardProps) => {
   return (
-    <Card className="bg-white rounded-xl">
+    <Card className="bg-white rounded-xl shadow-drop">
       <HStack className="gap-2">
         <Box
           className={`${colorClass} justify-center p-3 rounded-full aspect-square `}
@@ -64,10 +70,14 @@ export default function Page() {
   const tabItems = ["요약"];
   const [currentTab, setCurrentTab] = useState(0);
 
-  const [chartWidth, setChartWidth] = useState<number>();
+  const dashboardInfo = useQuery({
+    queryKey: ["dashboard"],
+    queryFn: DashboardApi.fetchMyRecords
+  });
+
+  const score = 340;
 
   const pan = Gesture.Pan();
-
 
   return (
     <GestureHandlerRootView>
@@ -77,7 +87,7 @@ export default function Page() {
         backgroundColor={"#5EDAA3"}
         barStyle={"light-content"}
       />
-      <VStack className=" bg-primary-500 p-5 gap-3">
+      <VStack className=" bg-primary-500 p-5 gap-3 rounded-b-xl">
         <HStack className="justify-between">
           <Text className="text-highlight-lg " style={{ color: "white" }}>
             마이페이지
@@ -92,10 +102,33 @@ export default function Page() {
         <HStack className="justify-between">
           <HStack className="gap-2">
             <Text className="text-title color-white">갱갱갱</Text>
-            <Text className="bg-white rounded-full px-1 py-0.5">Lv. 6</Text>
+            <Text className="bg-white rounded-full px-1 py-0.5">
+              Lv. {Math.floor(score / 100)}
+            </Text>
           </HStack>
           {/* <Image/> */}
         </HStack>
+        <VStack className="bg-white rounded-xl p-4 gap-2">
+          <HStack className="justify-between">
+            <Text>현재 포인트</Text>
+            <Text className="text-highlight-md">
+              {score}
+              <Text className="text-body">점</Text>
+            </Text>
+          </HStack>
+          <Progress
+            value={score % 100}
+            size="md"
+            orientation="horizontal"
+            className="mb-3"
+          >
+            <ProgressFilledTrack />
+          </Progress>
+          <Text>
+            다음 레벨까지{" "}
+            <Text className="text-highlight-md">{100 - (score % 100)}</Text> 점
+          </Text>
+        </VStack>
       </VStack>
       <HStack className="gap-6 justify-center pt-4 border-b-[1px] border-b-placeholder">
         {tabItems.map((tab, i) => (
@@ -108,126 +141,81 @@ export default function Page() {
           </TouchableOpacity>
         ))}
       </HStack>
-      <GestureDetector gesture={pan}>
-        <Box>
-          {currentTab === 0 && (
-            <Grid
-              _extra={{
-                className: "grid-cols-2 ",
-              }}
-              className="gap-4 p-4"
-            >
-              <GridItem
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            onRefresh={dashboardInfo.refetch}
+            refreshing={dashboardInfo.isRefetching}
+          />
+        }
+      >
+        <GestureDetector gesture={pan}>
+          <Box>
+            {currentTab === 0 && (
+              <Grid
                 _extra={{
-                  className: "col-span-1",
+                  className: "grid-cols-2 ",
                 }}
+                className="gap-4 p-4"
               >
-                <StatCard
-                  title={"총 분리배출"}
-                  count={456}
-                  icon={<FontAwesome color="white" size={28} name="recycle" />}
-                />
-              </GridItem>
-              <GridItem
-                _extra={{
-                  className: "col-span-1",
-                }}
-              >
-                <StatCard
-                  title={"획득 배지"}
-                  count={456}
-                  icon={
-                    <FontAwesome color="white" size={24} name="certificate" />
-                  }
-                />
-              </GridItem>
-              <GridItem
-                _extra={{
-                  className: "col-span-1",
-                }}
-              >
-                <StatCard
-                  title={"연속 활동"}
-                  count={456}
-                  icon={
-                    <FontAwesome color="white" size={24} name="line-chart" />
-                  }
-                />
-              </GridItem>
-              <GridItem
-                _extra={{
-                  className: "col-span-1",
-                }}
-              >
-                <StatCard
-                  title={"현재 포인트"}
-                  count={456}
-                  icon={<FontAwesome color="white" size={24} name="star" />}
-                />
-              </GridItem>
-            </Grid>
-          )}
+                <GridItem
+                  _extra={{
+                    className: "col-span-1",
+                  }}
+                >
+                  <StatCard
+                    title={"총 분리배출"}
+                    count={456}
+                    icon={
+                      <FontAwesome color="white" size={28} name="recycle" />
+                    }
+                  />
+                </GridItem>
+                <GridItem
+                  _extra={{
+                    className: "col-span-1",
+                  }}
+                >
+                  <StatCard
+                    title={"획득 배지"}
+                    count={456}
+                    icon={
+                      <FontAwesome color="white" size={24} name="certificate" />
+                    }
+                  />
+                </GridItem>
+                <GridItem
+                  _extra={{
+                    className: "col-span-1",
+                  }}
+                >
+                  <StatCard
+                    title={"연속 활동"}
+                    count={456}
+                    icon={
+                      <FontAwesome color="white" size={24} name="line-chart" />
+                    }
+                  />
+                </GridItem>
+                <GridItem
+                  _extra={{
+                    className: "col-span-1",
+                  }}
+                >
+                  <StatCard
+                    title={"현재 포인트"}
+                    count={456}
+                    icon={<FontAwesome color="white" size={24} name="star" />}
+                  />
+                </GridItem>
+              </Grid>
+            )}
+          </Box>
+        </GestureDetector>
+        <Box className="p-4">
+          <SimpleVictoryChart />
         </Box>
-      </GestureDetector>
-      <Box className="p-4" onLayout={(e) => setChartWidth(e.nativeEvent.layout.width)}>
-        <LineChart
-          data={{
-            labels: ["월", "화", "수", "목", "금", "토", "일"],
-            legend: ['배출 건수', '획득 포인트'],
-            datasets: [
-              {
-                data: [
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                ],
-                color: (opacity = 1) => `#FF928A`,
-              },
-              {
-                data: [
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                ],
-                color: (opacity = 1) => `#8979FF`,
-              },
-            ],
-          }}
-          width={chartWidth ?? 0} // from react-native
-          height={220}
-          yAxisInterval={1} // optional, defaults to 1
-          
-          chartConfig={{
-            backgroundGradientFrom: "#fff",
-            backgroundGradientTo: "#fff",
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(0,0,0, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(0,0,0, ${opacity})`,
-            style: {
-              borderRadius: 16,
-              backgroundColor: "transparent",
-            },
-            propsForDots: {
-              r: "6",
-              strokeWidth: "2",
-              stroke: "#000",
-            },
-            
-          }}
-          bezier
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-            backgroundColor: "white",
-          }}
-        ></LineChart>
-      </Box>
+      </ScrollView>
     </GestureHandlerRootView>
   );
 }

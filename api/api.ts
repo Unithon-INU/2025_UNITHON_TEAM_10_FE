@@ -1,18 +1,17 @@
-import ky from "ky";
+import ky, { HTTPError } from "ky";
 import * as SecureStore from "expo-secure-store";
 import { parseISO, isValid, format, parseJSON } from "date-fns";
 
 const truncateMicroseconds = (value: string): string =>
   value.replace(/(\.\d{3})\d+/, "$1"); // 3자리까지 자름
 
-const isoDateToFormattedString = (
-  data: any
-): any => {
+const isoDateToFormattedString = (data: any): any => {
   if (Array.isArray(data)) {
     return data.map((item) =>
       typeof item === "object" && item !== null
         ? isoDateToFormattedString(item)
-        : typeof item === "string" && isValid(parseISO(truncateMicroseconds(item)))
+        : typeof item === "string" &&
+          isValid(parseISO(truncateMicroseconds(item)))
         ? format(parseISO(truncateMicroseconds(item)), "yyyy-MM-dd HH:mm:ss")
         : item
     );
@@ -38,8 +37,6 @@ const isoDateToFormattedString = (
   // 기본적으로 string/object/array 외에는 그대로 반환
   return data;
 };
-
-
 
 const api = ky.create({
   prefixUrl: process.env.EXPO_PUBLIC_API_URL,
@@ -120,7 +117,7 @@ const api = ky.create({
       },
     ],
     beforeError: [
-      (error) => {
+      async (error) => {
         console.error(
           "❌ Request Error Caught by ky beforeError hook:",
           error.name,
@@ -140,6 +137,18 @@ const api = ky.create({
         }
         if (error.response) {
           console.error("📄 Error Response Status:", error.response.status);
+          const resBody = await error.response.json();
+          if (isResponseWrapper(resBody)) {
+            return {
+              ...error,
+              response: new Response(JSON.stringify(resBody), {
+                status: error.response.status,
+                statusText: resBody.status,
+                headers: error.response.headers,
+              }),
+            };
+          }
+
           error.response
             .text()
             .then((text) => {
