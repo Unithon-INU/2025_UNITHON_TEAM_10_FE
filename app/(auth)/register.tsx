@@ -1,4 +1,4 @@
-import AuthApi from "@/api/auth";
+import AuthApi, { EmailRegex, PasswordRegex } from "@/api/auth";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Input, InputField } from "@/components/ui/input";
@@ -21,17 +21,9 @@ export default function Page() {
   };
 
   const register = () => {
-    if (
-      !new RegExp(
-        "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
-      ).test(registerForm.email)
-    )
+    if (!EmailRegex.test(registerForm.email))
       return Alert.alert("알림", "이메일 형식이 올바르지 않아요.. 🥲");
-    else if (
-      !new RegExp(
-        "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{8,}$"
-      ).test(registerForm.password)
-    )
+    else if (!PasswordRegex.test(registerForm.password))
       return Alert.alert(
         "알림",
         "비밀번호는 영대소문자, 숫자, 특수문자를 포함해 8자 이상이어야 해요."
@@ -59,7 +51,8 @@ export default function Page() {
               break;
             }
             case 400: {
-              Alert.alert("오류", "올바르게 입력되지 않은 항목이 있어요.")
+              Alert.alert("오류", "올바르게 입력되지 않은 항목이 있어요.");
+              break; 
             }
             default:
               Alert.alert("알림 ", "회원가입에 실패했어요.. 🥲");
