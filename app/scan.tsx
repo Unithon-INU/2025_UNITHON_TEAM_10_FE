@@ -34,6 +34,8 @@ import { Text } from "@/components/ui/text";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
+import { useQuery } from "@tanstack/react-query";
+import WasteApi from "@/api/waste";
 
 const plugin = VisionCameraProxy.initFrameProcessorPlugin("detect", {});
 
@@ -110,6 +112,11 @@ export default function Scan() {
   const isActive = isFocused && appState === "active";
 
   const [activeClass, setActiveClass] = useState<number>();
+  const recycleQuery = useQuery({
+    queryKey: ["recycle", activeClass],
+    queryFn: ({ queryKey: [_, activeClass] }) =>
+      WasteApi.recycle(cocoClasses[activeClass as number] , 1),
+  });
 
   useEffect(() => {
     const devices = Camera.getAvailableCameraDevices();
@@ -133,7 +140,8 @@ export default function Scan() {
       // 여기서는 카메라 프리뷰가 화면 전체를 채우지만, 원본 프레임의 가로세로 비율이 유지된다고 가정합니다.
 
       const cameraAspectRatio = frameWidth / frameHeight;
-      const screenAspectRatio = screenDimensions.width / screenDimensions.height;
+      const screenAspectRatio =
+        screenDimensions.width / screenDimensions.height;
 
       let displayWidth, displayHeight, offsetX, offsetY;
 
@@ -169,15 +177,14 @@ export default function Scan() {
         width: absoluteWidth,
         height: absoluteHeight,
       };
-    }
-    else {
+    } else {
       const screenWidth = screenDimensions.width;
       const screenHeight = screenDimensions.height - 56;
       const screenMinSize = Math.min(screenWidth, screenHeight);
       const screenMaxSize = Math.max(screenWidth, screenHeight);
       const screenRatio = screenMinSize / screenMaxSize;
 
-      relativeXCenter = relativeXCenter / frameWidth + (1-screenRatio)/2;
+      relativeXCenter = relativeXCenter / frameWidth + (1 - screenRatio) / 2;
       relativeYCenter = relativeYCenter / frameHeight;
       relativeWidth = relativeWidth / frameWidth;
       relativeHeight = relativeHeight / frameHeight;
@@ -187,9 +194,9 @@ export default function Scan() {
       const absoluteWidth = relativeWidth * screenMaxSize;
       const absoluteHeight = relativeHeight * screenMaxSize;
 
-      const absoluteX = absoluteXCenter - absoluteWidth/2;
-      const absoluteY = absoluteYCenter - absoluteHeight/2; 
-      
+      const absoluteX = absoluteXCenter - absoluteWidth / 2;
+      const absoluteY = absoluteYCenter - absoluteHeight / 2;
+
       // console.log(relativeXCenter, relativeYCenter, relativeWidth, relativeHeight)
       // console.log(absoluteXCenter, absoluteYCenter, absoluteWidth, absoluteHeight)
 
@@ -340,13 +347,13 @@ export default function Scan() {
         </Canvas>
       </Pressable>
 
-      {activeClass && (
+      {recycleQuery.data && (
         <VStack
           className={`absolute bg-white p-5 left-5 right-5 rounded-xl gap-2`}
           style={{ bottom: inset.bottom }}
         >
           <HStack className="items-center justify-between">
-            <Text>{cocoClasses[activeClass]}</Text>
+            <Text>{recycleQuery.data.classificationResult.name}</Text>
             {/* <Image source={{}}></Image> */}
             <TouchableOpacity
               className="p-2"
@@ -357,14 +364,12 @@ export default function Scan() {
               <Icon as={CloseIcon} size="xl" />
             </TouchableOpacity>
           </HStack>
-          <Text>
-            내용물을 비우고 물로 헹군 후 페트병 라벨지를 제거하고 압착하여
-            뚜껑을 닫아 음료·생수용 무색·투명 페트병만 투명 또는 반투명 봉투에
-            배출하시면 됩니다.
-          </Text>
-          <Text className="text-description">
-            AI가 분류한 결과입니다. 부정확 할 수 있습니다.
-          </Text>
+          <Text>{recycleQuery.data.classificationResult.disposalMethod}</Text>
+          {recycleQuery.data.classificationResult.createdByAi && (
+            <Text className="text-description">
+              AI가 분류한 결과입니다. 부정확 할 수 있습니다.
+            </Text>
+          )}
           <HStack className="gap-4">
             <Button className="flex-1 rounded-xl">
               <ButtonText>더 알아보기</ButtonText>

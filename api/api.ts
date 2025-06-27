@@ -1,6 +1,7 @@
 import ky, { HTTPError } from "ky";
 import * as SecureStore from "expo-secure-store";
 import { parseISO, isValid, format, parseJSON } from "date-fns";
+import { router } from "expo-router";
 
 const truncateMicroseconds = (value: string): string =>
   value.replace(/(\.\d{3})\d+/, "$1"); // 3자리까지 자름

@@ -39,7 +39,7 @@ export default function Page() {
           }
         >
           <HStack className="justify-between  ">
-            <Text>로그아웃</Text> <Icon as={ChevronRightIcon} />
+            <Text>로그아웃</Text><Icon as={ChevronRightIcon} />
           </HStack>
         </TouchableOpacity>
       </VStack>

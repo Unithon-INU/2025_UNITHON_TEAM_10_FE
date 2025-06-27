@@ -37,6 +37,7 @@ type StatCardProps = {
   title: string;
   count: number | string;
   icon: React.ReactNode;
+  unit: string;
   colorClass?: string; // e.g., "bg-primary-500"
 };
 
@@ -44,6 +45,7 @@ export const StatCard = ({
   title,
   count,
   icon,
+  unit,
   colorClass = "bg-primary-500",
 }: StatCardProps) => {
   return (
@@ -58,7 +60,7 @@ export const StatCard = ({
           <Text className="text-description">{title}</Text>
           <Text className="text-highlight-md">
             {count}
-            <Text>건</Text>
+            <Text>{unit}</Text>
           </Text>
         </VStack>
       </HStack>
@@ -72,10 +74,10 @@ export default function Page() {
 
   const dashboardInfo = useQuery({
     queryKey: ["dashboard"],
-    queryFn: DashboardApi.fetchMyRecords
+    queryFn: DashboardApi.fetchMyRecords,
   });
 
-  const score = 340;
+  const score = dashboardInfo.data?.userInfo.currentPoints ?? 0;
 
   const pan = Gesture.Pan();
 
@@ -101,9 +103,11 @@ export default function Page() {
         </HStack>
         <HStack className="justify-between">
           <HStack className="gap-2">
-            <Text className="text-title color-white">갱갱갱</Text>
+            <Text className="text-title color-white">
+              {dashboardInfo.data?.userInfo.nickname}
+            </Text>
             <Text className="bg-white rounded-full px-1 py-0.5">
-              Lv. {Math.floor(score / 100)}
+              Lv. {dashboardInfo.data?.userInfo.level}
             </Text>
           </HStack>
           {/* <Image/> */}
@@ -165,10 +169,11 @@ export default function Page() {
                 >
                   <StatCard
                     title={"총 분리배출"}
-                    count={456}
+                    count={dashboardInfo.data?.summary.totalRecycleCount ?? 0}
                     icon={
                       <FontAwesome color="white" size={28} name="recycle" />
                     }
+                    unit="건"
                   />
                 </GridItem>
                 <GridItem
@@ -178,10 +183,11 @@ export default function Page() {
                 >
                   <StatCard
                     title={"획득 배지"}
-                    count={456}
+                    count={dashboardInfo.data?.summary.badgeCount ?? 0}
                     icon={
                       <FontAwesome color="white" size={24} name="certificate" />
                     }
+                    unit="개"
                   />
                 </GridItem>
                 <GridItem
@@ -191,10 +197,11 @@ export default function Page() {
                 >
                   <StatCard
                     title={"연속 활동"}
-                    count={456}
+                    count={dashboardInfo.data?.summary.continuousDays ?? 0}
                     icon={
                       <FontAwesome color="white" size={24} name="line-chart" />
                     }
+                    unit="건"
                   />
                 </GridItem>
                 <GridItem
@@ -204,8 +211,9 @@ export default function Page() {
                 >
                   <StatCard
                     title={"현재 포인트"}
-                    count={456}
+                    count={dashboardInfo.data?.userInfo.currentPoints ?? 0}
                     icon={<FontAwesome color="white" size={24} name="star" />}
+                    unit="점"
                   />
                 </GridItem>
               </Grid>
@@ -213,7 +221,7 @@ export default function Page() {
           </Box>
         </GestureDetector>
         <Box className="p-4">
-          <SimpleVictoryChart />
+          <SimpleVictoryChart data={dashboardInfo.data?.stats ?? []} />
         </Box>
       </ScrollView>
     </GestureHandlerRootView>

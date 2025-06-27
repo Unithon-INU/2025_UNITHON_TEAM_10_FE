@@ -20,11 +20,21 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ImageCard } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import DashboardApi from "@/api/dashboard";
-import { SplashScreen } from "expo-router";
+import { SplashScreen, useNavigation } from "expo-router";
 import { Meter } from "@/components/ui/meter";
 import WasteApi from "@/api/waste";
 import useDebounce from "@/lib/useDebounce";
 import FocusAwareStatusBar from "@/components/ui/focus-aware-status-bar";
+import { CommonActions } from "@react-navigation/native";
+import * as SecureStorage from "expo-secure-store";
+import { HTTPError } from "ky";
+
+const TrashStat = ({ count, icon }: { count: number; icon: any }) => (
+  <HStack className="items-center gap-1">
+    <ImageIcon image={icon} size="md" />
+    <Text className="text-highlight-md">{count}</Text>
+  </HStack>
+);
 
 export default function Main() {
   const phrases = [
@@ -52,10 +62,26 @@ export default function Main() {
   }, [searchInput]);
 
   const [searchBoxFocused, setSearchBoxFocused] = useState(false);
+  const navigation = useNavigation();
 
   const myRecords = useQuery({
     queryKey: ["myRecords"],
-    queryFn: async () => await DashboardApi.fetchMyRecords(),
+    queryFn: async () => {
+      try {
+        return await DashboardApi.fetchMyRecords();
+      } catch (e) {
+        if (e instanceof HTTPError && e.response.status == 403) {
+          await SecureStorage.deleteItemAsync("token");
+
+          navigation.dispatch(
+            CommonActions.reset({
+              routes: [{ name: "(auth)/login" }],
+            })
+          );
+          throw new Error("로그인 안됨");
+        }
+      }
+    },
   });
   const banners = useQuery({
     queryKey: ["banners"],
@@ -68,8 +94,25 @@ export default function Main() {
       WasteApi.searchWasteByName(query),
   });
 
-  const achievements = myRecords.data?.stat!;
-  const recycleStats = myRecords.data?.recycleCounts!;
+  const currentPoints = myRecords.data?.userInfo.currentPoints;
+  const amount = (myRecords.data?.userInfo.currentPoints ?? 0) / 5;
+
+  const achievements = [
+    {
+      unit: "점",
+      value: currentPoints,
+    },
+    {
+      unit: "kg",
+      value: amount * 0.035,
+      label: "이산화탄소",
+    },
+    {
+      unit: "km",
+      value: amount * 100,
+    },
+  ];
+  const recycleStats = myRecords.data?.trashStat;
 
   useEffect(() => {
     if (!myRecords.isLoading) {
@@ -101,12 +144,12 @@ export default function Main() {
               </Svg>
             </Box>
             <HStack className="gap-5 justify-center items-center">
-              {achievements.map((achieve, i) => (
+              {achievements?.map((achieve, i) => (
                 <HStack key={`achievement-${i}`}>
                   <Meter key={i} unit={achieve.unit} desc={achieve.label}>
                     {achieve.value}
                   </Meter>
-                  {i < achievements.length - 1 && (
+                  {i < (achievements?.length ?? 0) - 1 && (
                     <Divider
                       orientation="vertical"
                       className="bg-placeholder w-[0.5px]"
@@ -116,23 +159,34 @@ export default function Main() {
               ))}
             </HStack>
             <HStack className="bg-background-500 items-center justify-center gap-4 py-4 rounded-xl ">
-              {recycleStats.map((stat, i) => (
-                <HStack key={`stat-${i}`}>
-                  <ImageIcon
-                    image={require("/assets/images/pet.png")}
-                    size="md"
-                  />
-                  <Text className="text-highlight-md" key={`stat_${i}`}>
-                    {stat.count}
-                  </Text>
-                  {i < recycleStats.length - 1 && (
-                    <Divider
-                      orientation="vertical"
-                      className="bg-placeholder w-[0.5px]"
-                    />
-                  )}
-                </HStack>
-              ))}
+              <TrashStat
+                count={recycleStats?.plasticCount ?? 0}
+                icon={require("../../assets/images/pet.png")}
+              />
+              <Divider
+                orientation="vertical"
+                className="bg-placeholder w-[0.5px]"
+              />
+              <TrashStat
+                count={recycleStats?.metalCount ?? 0}
+                icon={require("../../assets/images/can.png")}
+              />
+              <Divider
+                orientation="vertical"
+                className="bg-placeholder w-[0.5px]"
+              />
+              <TrashStat
+                count={recycleStats?.cardboardCount ?? 0}
+                icon={require("../../assets/images/box.png")}
+              />
+              <Divider
+                orientation="vertical"
+                className="bg-placeholder w-[0.5px]"
+              />
+              <TrashStat
+                count={recycleStats?.vynylCount ?? 0}
+                icon={require("../../assets/images/vynyl.png")}
+              />
             </HStack>
           </VStack>
           <VStack>

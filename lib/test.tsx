@@ -10,30 +10,26 @@ import {
   VictoryLabel,
 } from "victory-native";
 import { Box } from "@/components/ui/box";
+import { Stat } from "@/api/dashboard";
+import { parseJSON } from "date-fns";
 
-const VictoryChartExample = () => {
+const VictoryChartExample = ({ data }: { data: Stat[] }) => {
   // 데이터 구성
-  const recoveryData = [
-    { x: 1, y: 125, label: "월" },
-    { x: 2, y: 185, label: "화" },
-    { x: 3, y: 80, label: "수" },
-    { x: 4, y: 200, label: "목" },
-    { x: 5, y: 150, label: "금" },
-    { x: 6, y: 250, label: "토" },
-    { x: 7, y: 100, label: "일" },
-  ];
-
-  const dischargeData = [
-    { x: 1, y: 5 },
-    { x: 2, y: 10 },
-    { x: 3, y: 2 },
-    { x: 4, y: 8 },
-    { x: 5, y: 5 },
-    { x: 6, y: 10 },
-    { x: 7, y: 3 },
-  ];
-
   const days = ["", "월", "화", "수", "목", "금", "토", "일"];
+  const earnPointData = data.map((day, i) => {
+    let dayNumber = parseJSON(day.date).getDay();
+    if (dayNumber == 0) dayNumber += 7;
+    return {
+      x: i + 1,
+      y: day.pointsEarned,
+      label: days[dayNumber],
+    };
+  });
+  const dischargeData = data.map((day, i) => ({
+    x: i + 1,
+    y: day.recycleCount,
+  }));
+
 
   return (
     <Box className="bg-white rounded-xl py-5 shadow-drop">
@@ -66,9 +62,9 @@ const VictoryChartExample = () => {
           }}
         />
 
-        {/* 회복 포인트 라인 */}
+        {/* 획득 포인트 라인 */}
         <VictoryLine
-          data={recoveryData}
+          data={earnPointData}
           labelComponent={<VictoryLabel style={{ fill: "transparent" }} />}
           labels={() => null}
           style={{
@@ -80,9 +76,9 @@ const VictoryChartExample = () => {
           }}
         />
 
-        {/* 회복 포인트 점 */}
+        {/* 획득 포인트 점 */}
         <VictoryScatter
-          data={recoveryData}
+          data={earnPointData}
           labelComponent={<VictoryLabel style={{ fill: "transparent" }} />}
           labels={() => null}
           size={4}
@@ -121,7 +117,7 @@ const VictoryChartExample = () => {
         </Box>
         <Box className="flex-row items-center gap-2">
           <Box style={{ ...styles.legendLine, backgroundColor: "#FF6B6B" }} />
-          <Text>회복 포인트</Text>
+          <Text>획득 포인트</Text>
         </Box>
       </Box>
     </Box>

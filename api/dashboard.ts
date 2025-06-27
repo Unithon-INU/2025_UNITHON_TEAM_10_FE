@@ -1,33 +1,53 @@
+import api from "./api";
+
+interface UserInfo {
+  nickname: string;
+  profileImageUrl: string;
+  level: number;
+  currentPoints: number;
+  pointsToNextLevel: number;
+}
+
+interface Summary {
+  totalRecycleCount: number;
+  badgeCount: number;
+  continuousDays: number;
+  currentPoints: number;
+}
+
+export interface Stat {
+  date: string;
+  recycleCount: number;
+  pointsEarned: number;
+}
+
+interface Achievement {
+  id: number;
+  title: string;
+  description: string;
+  iconUrl: string;
+}
+
+interface Achievements {
+  earned: Achievement[];
+  unearned: Achievement[];
+}
+
+interface UserData {
+  userInfo: UserInfo;
+  summary: Summary;
+  stats: Stat[];
+  trashStat: {
+    plasticCount: number,
+    metalCount: number,
+    cardboardCount: number,
+    vynylCount: number
+  };
+}
+
 export default class DashboardApi {
   static async fetchMyRecords() {
-    return {
-      totalRecycle: 123,
-      badgeCount: 5,
-      continiousCount: 12,
-      currentScore: 430,
-      recycleCounts: [
-        { type: "can", count: 40 },
-        { type: "paper", count: 30 },
-        { type: "pet", count: 20 },
-        { type: "metal", count: 15 },
-      ],
-      stat: [
-        {
-          unit: "점",
-          value: 340,
-        },
-        {
-          unit: "kg",
-          value: 2.3,
-          label: "이산화탄소",
-        },
-        {
-          unit: "km",
-          value: 3,
-          label: "자동차",
-        },
-      ],
-    };
+    return await api.get('users/me/dashboard').json<UserData>();
   }
   static async fetchBanners() {
     return [
