@@ -28,6 +28,7 @@ import FocusAwareStatusBar from "@/components/ui/focus-aware-status-bar";
 import { CommonActions } from "@react-navigation/native";
 import * as SecureStorage from "expo-secure-store";
 import { HTTPError } from "ky";
+import convertKmKgToMg from "@/lib/unitConverter";
 
 const TrashStat = ({ count, icon }: { count: number; icon: any }) => (
   <HStack className="items-center gap-1">
@@ -103,13 +104,11 @@ export default function Main() {
       value: currentPoints,
     },
     {
-      unit: "kg",
-      value: amount * 0.035,
+      value: convertKmKgToMg(amount * 0.035, 'g'),
       label: "이산화탄소",
     },
     {
-      unit: "km",
-      value: amount * 100,
+      value: convertKmKgToMg(amount * 0.1, 'm'),
     },
   ];
   const recycleStats = myRecords.data?.trashStat;
