@@ -8,10 +8,10 @@
     "channels" : "3",
     "task" : "detect",
     "docs" : "https:\/\/docs.ultralytics.com",
-    "imgsz" : "[640, 640]",
     "date" : "2025-06-22T15:01:00.119442",
-    "batch" : "1",
+    "imgsz" : "[640, 640]",
     "args" : "{'batch': 1, 'half': False, 'int8': False, 'nms': True}",
+    "batch" : "1",
     "names" : "{0: 'cardboard', 1: 'glass', 2: 'metal', 3: 'organic', 4: 'paper', 5: 'plastic', 6: 'vynyl'}"
   },
   "MLModelAuthorKey" : "Ultralytics",

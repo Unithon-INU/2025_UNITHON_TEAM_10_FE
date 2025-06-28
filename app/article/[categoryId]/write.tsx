@@ -139,7 +139,7 @@ useEffect(() => {
         </ScrollView>
 
         {/* 하단 도구 모음 */}
-        <HStack
+        {/* <HStack
           className="px-4 py-3 border-t border-gray-200"
           style={{ paddingBottom: insets.bottom }}
         >
@@ -150,7 +150,7 @@ useEffect(() => {
             <ButtonIcon as={() => <FontAwesome name="photo" />} />
             <Text>사진</Text>
           </Button>
-        </HStack>
+        </HStack> */}
       </VStack>
     </KeyboardAvoidingView>
   );

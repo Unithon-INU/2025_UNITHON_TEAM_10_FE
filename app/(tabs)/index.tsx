@@ -101,7 +101,7 @@ export default function Main() {
   const achievements = [
     {
       unit: "점",
-      value: currentPoints,
+      value: currentPoints + " 점",
     },
     {
       value: convertKmKgToMg(amount * 0.035, 'g'),
@@ -145,7 +145,7 @@ export default function Main() {
             <HStack className="gap-5 justify-center items-center">
               {achievements?.map((achieve, i) => (
                 <HStack key={`achievement-${i}`}>
-                  <Meter key={i} unit={achieve.unit} desc={achieve.label}>
+                  <Meter key={i} unit={""} desc={achieve.label}>
                     {achieve.value}
                   </Meter>
                   {i < (achievements?.length ?? 0) - 1 && (
