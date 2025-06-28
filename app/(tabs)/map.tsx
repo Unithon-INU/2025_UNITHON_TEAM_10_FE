@@ -24,6 +24,13 @@ type LocationInfo = {
   longitude: number;
 };
 
+const startPosition: Region = {
+  latitude: 37.55140598,
+  longitude: 127.0218194,
+  latitudeDelta: 0.38,
+  longitudeDelta: 0.8,
+}
+
 export default function Page() {
   const inset = useSafeAreaInsets();
 
@@ -52,6 +59,7 @@ export default function Page() {
         style={{ flex: 1 }}
         locale="ko"
         logoAlign={"BottomRight"}
+        initialRegion={startPosition}
         onInitialized={() => console.log("initialized!")}
         onOptionChanged={() => console.log("Option Changed!")}
       >
