@@ -69,7 +69,7 @@ const api = ky.create({
         try {
           token = await SecureStore.getItemAsync("token");
         } catch (error) {
-          console.error("🚫 Error getting token from SecureStore:", error);
+          console.log("🚫 Error getting token from SecureStore:", error);
         }
 
         if (!token) {
@@ -119,25 +119,25 @@ const api = ky.create({
     ],
     beforeError: [
       async (error) => {
-        console.error(
+        console.log(
           "❌ Request Error Caught by ky beforeError hook:",
           error.name,
           error.message
         );
         if (error.request) {
-          console.error(
+          console.log(
             "🔗 Error Request Details:",
             error.request.method,
             error.request.url
           );
-          console.error(
+          console.log(
             "🔗 Error Request Headers:",
             Object.fromEntries(error.request.headers.entries())
           );
           return error;
         }
         if (error.response) {
-          console.error("📄 Error Response Status:", error.response.status);
+          console.log("📄 Error Response Status:", error.response.status);
           const resBody = await error.response.json();
           if (isResponseWrapper(resBody)) {
             return {
@@ -153,10 +153,10 @@ const api = ky.create({
           error.response
             .text()
             .then((text) => {
-              console.error("🔥 Error Response Body:", text);
+              console.log("🔥 Error Response Body:", text);
             })
             .catch((e) => {
-              console.error(
+              console.log(
                 "🔥 Could not read error response body due to:",
                 e.message
               );
@@ -168,7 +168,7 @@ const api = ky.create({
           error.name === "TypeError" &&
           error.message === "Network request failed"
         ) {
-          console.error(
+          console.log(
             "🌐 This is likely a network issue (CORS, offline, invalid URL, DNS, etc.)."
           );
         }

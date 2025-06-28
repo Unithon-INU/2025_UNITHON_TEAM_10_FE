@@ -34,7 +34,7 @@ import { Text } from "@/components/ui/text";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import WasteApi from "@/api/waste";
 
 const plugin = VisionCameraProxy.initFrameProcessorPlugin("detect", {});
@@ -94,6 +94,8 @@ export default function Scan() {
     }
   }, []);
 
+  const queryClient = useQueryClient();
+
   // 화면 크기 변경 감지
   useEffect(() => {
     const subscription = Dimensions.addEventListener("change", ({ window }) => {
@@ -103,7 +105,10 @@ export default function Scan() {
       });
     });
 
-    return () => subscription?.remove();
+    return () => {
+      subscription?.remove();
+      queryClient.refetchQueries({queryKey: ['myRecords']});
+    };
   }, []);
 
   // Android 15에 대응하기 위해 앱이 포그라운드에서 활성상태인 경우에만 카메라를 활성화합니다.
@@ -115,7 +120,7 @@ export default function Scan() {
   const recycleQuery = useQuery({
     queryKey: ["recycle", activeClass],
     queryFn: ({ queryKey: [_, activeClass] }) =>
-      WasteApi.recycle(cocoClasses[activeClass as number] , 1),
+      WasteApi.recycle(cocoClasses[activeClass as number], 1),
   });
 
   useEffect(() => {
@@ -248,7 +253,7 @@ export default function Scan() {
         device={device}
         isActive={isActive}
         onError={(e) => {
-          console.error(e);
+          console.log(e);
           alert(e);
         }}
         frameProcessor={frameProcessor}

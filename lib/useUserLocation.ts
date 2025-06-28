@@ -27,7 +27,7 @@ export default function useUserLocation(initialDelta = 0.01) {
           longitudeDelta: initialDelta,
         });
       } catch (err) {
-        console.error("위치 요청 실패:", err);
+        console.log("위치 요청 실패:", err);
       }
     })();
   }, []);

@@ -36,7 +36,7 @@ export default function LoginScreen() {
       await SecureStorage.setItemAsync("token", token);
       router.navigate("/(tabs)");
     } catch (e) {
-      console.error(e);
+      console.log(e);
       if (e instanceof HTTPError) {
         switch (e.response.status) {
           case 400: {

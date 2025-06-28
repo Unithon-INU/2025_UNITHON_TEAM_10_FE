@@ -45,7 +45,7 @@ export default function Page() {
         router.back();
       }
     } catch (e) {
-      console.error(e);
+      console.log(e);
       alert("글 작성에 실패했어요.. 🥲");
     }
   }, [title, content, images]);

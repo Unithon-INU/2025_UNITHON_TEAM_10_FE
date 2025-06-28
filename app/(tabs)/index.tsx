@@ -20,7 +20,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ImageCard } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import DashboardApi from "@/api/dashboard";
-import { SplashScreen, useNavigation } from "expo-router";
+import { router, SplashScreen, useNavigation } from "expo-router";
 import { Meter } from "@/components/ui/meter";
 import WasteApi from "@/api/waste";
 import useDebounce from "@/lib/useDebounce";
@@ -109,6 +109,7 @@ export default function Main() {
     },
     {
       value: convertKmKgToMg(amount * 0.1, 'm'),
+      label: '자동차'
     },
   ];
   const recycleStats = myRecords.data?.trashStat;
@@ -247,7 +248,7 @@ export default function Main() {
               backgroundImage={banner.backgroundImage}
               overlayOpacity={0}
               onClick={() => {
-                alert("banner");
+                router.push('/scan');
               }}
             />
           ))}

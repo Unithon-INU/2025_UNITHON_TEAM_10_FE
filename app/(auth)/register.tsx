@@ -43,7 +43,7 @@ export default function Page() {
         router.back();
       })
       .catch((e) => {
-        console.error(e);
+        console.log(e);
         if (e instanceof HTTPError) {
           switch (e.response.status) {
             case 409: {

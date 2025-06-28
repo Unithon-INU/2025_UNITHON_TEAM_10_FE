@@ -41,7 +41,7 @@ export default function Page() {
           await Location.requestBackgroundPermissionsAsync();
         }
       } catch (e) {
-        console.error(`Location request has been failed: ${e}`);
+        console.log(`Location request has been failed: ${e}`);
       }
     })();
   }, []);
