@@ -18,11 +18,21 @@ import {
   VerticalThreeDotsIcon,
 } from "@/components/ui/icon";
 import { FontAwesome, FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
-import { Alert, RefreshControl, ScrollView, StatusBar } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  RefreshControl,
+  ScrollView,
+  StatusBar,
+} from "react-native";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Menu, MenuItem, MenuItemLabel } from "@/components/ui/menu";
 import FocusAwareStatusBar from "@/components/ui/focus-aware-status-bar";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { Divider } from "@/components/ui/divider";
 import { Box } from "@/components/ui/box";
 import { Input, InputField } from "@/components/ui/input";
@@ -37,12 +47,12 @@ export default function Page({}) {
 
   const articleQuery = useQuery({
     queryKey: ["article", "single", categoryId, id],
-    queryFn: ({ queryKey: [_, __, categoryId, id],  }) => {
+    queryFn: ({ queryKey: [_, __, categoryId, id] }) => {
       return ArticleApi.fetchArticle(categoryId, Number(id), initialized);
     },
   });
 
-  useEffect(() => setInitialized(true), [articleQuery.isFetched])
+  useEffect(() => setInitialized(true), [articleQuery.isFetched]);
 
   const articleOptions = articleQuery.data?.isAuthor
     ? [
@@ -74,19 +84,25 @@ export default function Page({}) {
   const [comment, setComment] = useState("");
   const inset = useSafeAreaInsets();
   const submitComment = () => {
-    ArticleApi.writeComment(categoryId, id, comment).then(() => {
-      Alert.alert("알림", "댓글이 작성됐어요.")
-      setComment('')
-      articleQuery.refetch();
-    }).catch(e => {
-      Alert.alert("오류", "댓글 작성에 실패했어요.. 🥲")
-    })
-  }
+    ArticleApi.writeComment(categoryId, id, comment)
+      .then(() => {
+        Alert.alert("알림", "댓글이 작성됐어요.");
+        setComment("");
+        articleQuery.refetch();
+      })
+      .catch((e) => {
+        Alert.alert("오류", "댓글 작성에 실패했어요.. 🥲");
+      });
+  };
 
   if (!articleQuery.data) return <Text>hi</Text>;
 
   return (
-    <>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={inset.bottom + 20}
+    >
       <ScrollView
         refreshControl={
           <RefreshControl
@@ -228,7 +244,10 @@ export default function Page({}) {
           )}
         </VStack>
       </ScrollView>
-      <HStack className="gap-2 bg-white py-5 pl-4 pr-3 shadow-drop rounded-xl" style={{paddingBottom: inset.bottom + 20}}>
+      <HStack
+        className="gap-2 bg-white py-5 pl-4 pr-3 shadow-drop rounded-xl"
+        style={{ paddingBottom: inset.bottom + 20 }}
+      >
         <Input className="rounded-lg border-[1px] text-center drop-shadow-xl flex-1">
           <InputField value={comment} onChangeText={setComment}></InputField>
         </Input>
@@ -236,6 +255,6 @@ export default function Page({}) {
           <ButtonText>작성</ButtonText>
         </Button>
       </HStack>
-    </>
+    </KeyboardAvoidingView>
   );
 }

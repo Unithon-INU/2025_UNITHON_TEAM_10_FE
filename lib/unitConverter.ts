@@ -9,7 +9,7 @@ export default function convertKmKgToMg(valueByKilo: number, unit: string): stri
     const valueMg: number = valueByKilo;
 
     if (valueByKilo <= 1) {
-        const scaledValue = valueMg * 1000;
+        const scaledValue = Math.round(valueMg * 1000);
         return `${scaledValue} ${unit}`;
     } else {
         return `${valueByKilo} k${unit}`;
